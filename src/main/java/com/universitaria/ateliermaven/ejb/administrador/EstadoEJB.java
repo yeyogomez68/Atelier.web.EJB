@@ -10,6 +10,7 @@ import com.universitaria.atelier.web.jpa.Estado;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.faces.model.SelectItem;
 
 /**
  *
@@ -32,6 +33,21 @@ public class EstadoEJB extends AbstractFacade<Estado>{
             e.printStackTrace();
         }       
         return null;
+    }
+    
+    public List<SelectItem> getSelectItemEstados(){
+        List<SelectItem> lista = new ArrayList<>();
+        try {
+            for(Estado esta :(ArrayList<Estado>) em.createNamedQuery("Estado.findAll",Estado.class).getResultList()){
+                lista.add(new SelectItem(esta.getEstadoId(),esta.getEstadoDescrip()));
+            }
+            return lista;
+        } catch (NullPointerException e){
+            return lista;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }            
+        return lista;
     }
     
 }
