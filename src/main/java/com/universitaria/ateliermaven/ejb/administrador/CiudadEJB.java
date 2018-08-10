@@ -6,40 +6,43 @@
 package com.universitaria.ateliermaven.ejb.administrador;
 
 import com.universitaria.atelier.web.jpa.AbstractFacade;
-import com.universitaria.atelier.web.jpa.Roll;
+import com.universitaria.atelier.web.jpa.Ciudad;
+import com.universitaria.atelier.web.jpa.Color;
+import com.universitaria.atelier.web.jpa.Estado;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.model.SelectItem;
-
 
 /**
  *
  * @author jeisson.gomez
  */
 @Stateless
-public class RollEJB  extends AbstractFacade<Roll>{
+public class CiudadEJB extends AbstractFacade<Ciudad>{
 
-    public RollEJB() {
-        super(Roll.class);
+    public CiudadEJB() {
+        super(Ciudad.class);
     }
     
-    public List<Roll> getRoles(){
+    
+    public List<Ciudad> getCiudades(){
         try {
-            return (ArrayList<Roll>) em.createNamedQuery("Roll.findAll",Roll.class).getResultList();
+            return (ArrayList<Ciudad>) em.createNamedQuery("Ciudad.findAll",Ciudad.class).getResultList();
         } catch (NullPointerException e){
             return null;
         } catch (Exception e) {
             e.printStackTrace();
         }       
         return null;
-    }
+    }    
     
-    public List<SelectItem> getSelectItemRoles(){
+    public List<SelectItem> getSelectItemCiudad(){
         List<SelectItem> lista = new ArrayList<>();
         try {
-            for(Roll roles :(ArrayList<Roll>) em.createNamedQuery("Roll.findAll",Roll.class).getResultList()){
-                lista.add(new SelectItem(roles.getRollId(),roles.getRollDesc()));
+            for(Ciudad ciudad :(ArrayList<Ciudad>) em.createNamedQuery("Ciudad.findAll",Ciudad.class).getResultList()){
+                lista.add(new SelectItem(ciudad.getCiudadId(),ciudad.getCiudadNombre()));
             }
             return lista;
         } catch (NullPointerException e){
@@ -50,3 +53,4 @@ public class RollEJB  extends AbstractFacade<Roll>{
         return lista;
     }
 }
+
