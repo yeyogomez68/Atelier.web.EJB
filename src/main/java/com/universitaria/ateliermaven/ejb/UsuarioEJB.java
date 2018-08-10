@@ -6,8 +6,11 @@
 package com.universitaria.ateliermaven.ejb;
 
 import com.universitaria.atelier.web.jpa.AbstractFacade;
-import com.universitaria.atelier.web.jpa.Material;
+import com.universitaria.atelier.web.jpa.Ciudad;
+import com.universitaria.atelier.web.jpa.Estado;
+import com.universitaria.atelier.web.jpa.Roll;
 import com.universitaria.atelier.web.jpa.Usuario;
+import com.universitaria.atelier.web.utils.UsuarioUtil;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,5 +54,26 @@ public class UsuarioEJB extends AbstractFacade<Usuario> {
             e.printStackTrace();
         }       
         return null;
+    }
+    
+    public boolean setCrearUsuario(UsuarioUtil usuarioCrear){
+        try {
+            Usuario usuario = new Usuario();            
+            usuario.setUsuarioIdentificacion(Integer.parseInt(usuarioCrear.getIdentificacion()));
+            usuario.setUsuarioNombre(usuarioCrear.getNombre());
+            usuario.setUsuarioApellido(usuarioCrear.getApellido());
+            usuario.setUsuarioEmail(usuarioCrear.getEmail());
+            usuario.setUsuarioPassword(usuarioCrear.getPassword());
+            usuario.setUsuarioDireccion(usuarioCrear.getDireccion());
+            usuario.setUsuarioCel(usuarioCrear.getCelular()); 
+            usuario.setEstadoId(em.find(Estado.class, Integer.parseInt(usuarioCrear.getEstadoId())));
+            usuario.setRollId(em.find(Roll.class,Integer.parseInt(usuarioCrear.getRollId())));
+            usuario.setCiudadId(em.find(Ciudad.class, Integer.parseInt(usuarioCrear.getCiudadId()))); 
+            create(usuario);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
