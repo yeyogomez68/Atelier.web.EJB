@@ -6,6 +6,7 @@
 package com.universitaria.ateliermaven.ejb.administrador;
 
 import com.universitaria.atelier.web.jpa.AbstractFacade;
+import com.universitaria.atelier.web.jpa.Estado;
 import com.universitaria.atelier.web.jpa.Roll;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,5 +49,29 @@ public class RollEJB  extends AbstractFacade<Roll>{
             e.printStackTrace();
         }            
         return lista;
+    }
+    
+    public boolean setCrearRoll(String rollDesc){
+        try {
+            Roll roll = new Roll();            
+            roll.setRollDesc(rollDesc);
+            roll.setEstadoId(em.find(Estado.class, 1));
+            create(roll);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    public boolean setModificarRoll(String rollId, String rollDescrip, String estadoId){
+        try {
+            Roll roll = new Roll();
+            roll = em.find(Roll.class, Integer.parseInt(rollId));
+            roll.setRollDesc(rollDescrip);
+            roll.setEstadoId(em.find(Estado.class, Integer.parseInt(estadoId)));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
