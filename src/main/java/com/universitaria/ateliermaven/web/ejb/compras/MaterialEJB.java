@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.universitaria.atelier.web.ejb.compras;
+package com.universitaria.ateliermaven.web.ejb.compras;
 
 import com.universitaria.atelier.web.jpa.AbstractFacade;
+import com.universitaria.atelier.web.jpa.Material;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 
@@ -14,10 +15,11 @@ import javax.ejb.LocalBean;
  * @author jeisson.gomez
  */
 @Stateless
-public class OrdenCompraEJB extends AbstractFacade<OrdenCompra> {
+public class MaterialEJB extends AbstractFacade<Material>{
 
-    public OrdenCompraEJB() {
-        super(OrdenCompra.class);
+    public MaterialEJB() {
+        super(Material.class);
     }
-
+    
+    
 }
