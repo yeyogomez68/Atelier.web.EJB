@@ -20,8 +20,7 @@ public class MaterialEJB extends AbstractFacade<Material>{
 
     public MaterialEJB() {
         super(Material.class);
-    }
-    
+    }   
     
     public List<Material> getMateriales(){
         try {
@@ -33,5 +32,4 @@ public class MaterialEJB extends AbstractFacade<Material>{
         }       
         return null;
     }
-    
 }
