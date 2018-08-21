@@ -29,20 +29,20 @@ public class UsuarioEJB extends AbstractFacade<Usuario> {
         super(Usuario.class);
     }
     
-    public boolean getAccess (String user, String password){
+    public Usuario getAccess (String user, String password){
         try {
 //            Query q1= em.createNativeQuery("Select * from Usuario Where UsuarioEmail = ?1 And UsuarioPassword = ?2 ",Usuario.class)
 //                    .setParameter(1, user)
 //                    .setParameter(2, password);
             Query q1 = em.createNamedQuery("Usuario.findByLogin", Usuario.class).setParameter("usuarioEmail", user).setParameter("usuarioPassword", password);           
-            return (q1.getSingleResult() != null);
+            return (Usuario)q1.getSingleResult();
         } catch(NoResultException e){
             System.out.println("UsuarioFacade.getAccess() NoResultException");
         } catch (Exception e) {
             System.out.println("UsuarioFacade.getAccess() Exception");
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
     
     public List<Usuario> getUsuarios(){
