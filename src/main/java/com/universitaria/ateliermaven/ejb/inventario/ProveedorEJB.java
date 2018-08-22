@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.universitaria.atelier.web.inventario;
+package com.universitaria.ateliermaven.ejb.inventario;
 
 import com.universitaria.atelier.web.jpa.AbstractFacade;
 import com.universitaria.atelier.web.jpa.Ciudad;
@@ -12,11 +12,14 @@ import com.universitaria.atelier.web.jpa.Proveedor;
 import com.universitaria.atelier.web.utils.ProveedorUtil;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.Stateless;
 
 /**
  *
  * @author SoulHunter
  */
+
+@Stateless
 public class ProveedorEJB extends AbstractFacade<Proveedor> {
 
     public ProveedorEJB() {

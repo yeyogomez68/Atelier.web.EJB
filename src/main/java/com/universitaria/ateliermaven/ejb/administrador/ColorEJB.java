@@ -35,4 +35,17 @@ public class ColorEJB extends AbstractFacade<Color>{
         return null;
     }
     
+        public boolean setCrearColor(String colorDescripcion){        
+        try {
+            Color color = new Color();
+            color.setColorDescrip(colorDescripcion);
+            create(color);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    
 }

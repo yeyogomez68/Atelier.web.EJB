@@ -50,4 +50,27 @@ public class EstadoEJB extends AbstractFacade<Estado>{
         return lista;
     }
     
+    
+    public boolean crearEstado (String nombreEstado) {
+        try {
+            if (!nombreEstado.equals("")){
+            Estado estado = new Estado();
+            estado.setEstadoDescrip(nombreEstado);           
+            create(estado);
+            return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean setModificarEstado (String nombreEstado) {
+        try {
+            
+        } catch (Exception e) {
+        }
+        return false;
+}
+    
 }
