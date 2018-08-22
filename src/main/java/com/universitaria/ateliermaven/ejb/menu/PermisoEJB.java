@@ -3,29 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.universitaria.ateliermaven.ejb.administrador;
+package com.universitaria.ateliermaven.ejb.menu;
 
 import com.universitaria.atelier.web.jpa.AbstractFacade;
-import com.universitaria.atelier.web.jpa.Material;
+import com.universitaria.atelier.web.jpa.Permiso;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.ejb.LocalBean;
 
 /**
  *
- * @author jeisson.gomez
+ * @author Jeisson Gomez
  */
 @Stateless
-public class MaterialEJB extends AbstractFacade<Material>{
+@LocalBean
+public class PermisoEJB extends AbstractFacade<Permiso>{
 
-    public MaterialEJB() {
-        super(Material.class);
+    public PermisoEJB() {
+        super(Permiso.class);
     }
     
-    
-    public List<Material> getMateriales(){
+    public List<Permiso> getPermisosByUser(){
         try {
-            return (ArrayList<Material>) em.createNamedQuery("Material.findAll",Material.class).getResultList();
+            return (ArrayList<Permiso>) em.createNamedQuery("Permiso.findPermByUser",Permiso.class).getResultList();
         } catch (NullPointerException e){
             return null;
         } catch (Exception e) {
@@ -33,5 +34,4 @@ public class MaterialEJB extends AbstractFacade<Material>{
         }       
         return null;
     }
-    
 }
