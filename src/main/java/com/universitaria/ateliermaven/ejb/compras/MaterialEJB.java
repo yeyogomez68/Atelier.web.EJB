@@ -80,4 +80,14 @@ public class MaterialEJB extends AbstractFacade<Material>{
             return false;
         }
     }
+    
+    public boolean getExisteMaterial(String materialNombre){
+        try {
+            return (em.createNamedQuery("Material.findByMaterialNombre").setParameter("materialNombre", materialNombre).getSingleResult()!=null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
 }

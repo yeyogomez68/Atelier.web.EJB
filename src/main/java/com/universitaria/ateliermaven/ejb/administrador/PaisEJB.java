@@ -10,6 +10,7 @@ import com.universitaria.atelier.web.jpa.Pais;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.faces.model.SelectItem;
 
 /**
  *
@@ -43,6 +44,44 @@ public class PaisEJB extends AbstractFacade<Pais> {
             e.printStackTrace();
         }
         return false;
+    }
+     
+       public boolean existePais(String paisDescripcion) {
+        try {
+            return (em.createNamedQuery("Pais.findByPaisNombre").setParameter("paisNombre", paisDescripcion).getSingleResult() != null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean setModificarPais(String paisId, String nuevaDescripcion) {
+        try {
+            Pais pais = em.find(Pais.class, Integer.parseInt(paisId));
+            if (!nuevaDescripcion.equalsIgnoreCase(pais.getPaisNombre())) {
+                pais.setPaisNombre(nuevaDescripcion);
+                edit(pais);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public List<SelectItem> getSelectItemPaises(){
+        List<SelectItem> lista = new ArrayList<>();
+        try {
+            for(Pais pai :(ArrayList<Pais>) em.createNamedQuery("Pais.findAll",Pais.class).getResultList()){
+                lista.add(new SelectItem(pai.getPaisId(),pai.getPaisNombre()));
+            }
+            return lista;
+        } catch (NullPointerException e){
+            return lista;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }            
+        return lista;
     }
     
 }
