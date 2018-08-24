@@ -7,6 +7,8 @@ package com.universitaria.ateliermaven.ejb.compras;
 
 import com.universitaria.atelier.web.jpa.AbstractFacade;
 import com.universitaria.atelier.web.jpa.Encabezadorequerimiento;
+import com.universitaria.atelier.web.jpa.Estado;
+import com.universitaria.atelier.web.jpa.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -39,16 +41,19 @@ public class EncabezadoRequerimientoEJB extends AbstractFacade<Encabezadorequeri
         return null;
     }
     
-    public boolean setCrearRequerimiento(){        
-        try {
+    public Integer setCrearRequerimiento(String desc,Usuario user){        
+        try {            
             Encabezadorequerimiento requerimiento = new Encabezadorequerimiento();
-           
+            requerimiento.setEncabezadoRequerimientoDeta(desc);
+            requerimiento.setUsuarioId(user);
+            requerimiento.setUsuarioCreador(user.getUsuarioId());
+            requerimiento.setEstadoId(em.find(Estado.class, 1));
             create(requerimiento);
-            return true;
+            return requerimiento.getEncabezadoRequerimientoId();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
     
     public boolean setModifiRequerimiento(String idRq,String deta){
