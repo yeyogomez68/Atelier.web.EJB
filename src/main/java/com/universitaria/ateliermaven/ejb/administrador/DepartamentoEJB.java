@@ -58,15 +58,12 @@ public class DepartamentoEJB extends AbstractFacade<Departamento> {
         return false;
     }
 
-    public boolean setModificarDepartamento(DepartamentoUtil departamentoUtil) {
+    public boolean setModificarDepartamento(Departamento departamento, String paisId) {
         try {
-            Departamento departamento = em.find(Departamento.class, Integer.parseInt(departamentoUtil.getDepartamentoId()));
-            if (!departamentoUtil.getDepartamentoNombre().equalsIgnoreCase(departamento.getDepartamentoNombre())) {
-                departamento.setDepartamentoNombre(departamentoUtil.getDepartamentoNombre());
-                departamento.setPaisId(em.find(Pais.class, Integer.parseInt(departamentoUtil.getPaisId())));
+            departamento.setPaisId(em.find(Pais.class, Integer.parseInt(paisId)));
                 edit(departamento);
                 return true;
-            }
+  
         } catch (Exception e) {
             e.printStackTrace();
         }

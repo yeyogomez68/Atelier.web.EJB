@@ -76,14 +76,11 @@ public class CiudadEJB extends AbstractFacade<Ciudad> {
         return false;
     }
 
-    public boolean setModificarCiudad(String ciudadId, String nuevaDescripcion) {
+    public boolean setModificarCiudad(Ciudad ciudad, String departamentoId) {
         try {
-            Ciudad ciudad = em.find(Ciudad.class, Integer.parseInt(ciudadId));
-            if (!nuevaDescripcion.equalsIgnoreCase(ciudad.getCiudadNombre())) {
-                ciudad.setCiudadNombre(nuevaDescripcion);
+            ciudad.setDepartamentoId(em.find(Departamento.class, Integer.parseInt(departamentoId)));
                 edit(ciudad);
                 return true;
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
