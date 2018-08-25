@@ -39,7 +39,7 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
                 rqDeta.setRequestDetaFecha(new Timestamp(System.currentTimeMillis()));
                 rqDeta.setUsuarioId(user.getUsuarioId());
                 rqDeta.setRequestDetaCantidad(Float.parseFloat(mat.getCantidad()));
-                create(rqDeta);                
+                em.persist(rqDeta);                
             }   
             return  true;
         } catch (Exception e) {
