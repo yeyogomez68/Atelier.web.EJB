@@ -23,13 +23,13 @@ public class OpcionEJB extends AbstractFacade<Opcion>{
         super(Opcion.class);
     }
     
-    public List<Opcion> getOpcionesByPerm(int type, String userId){
+    public List<Opcion> getOpcionesByPerm(int type, Integer roll){
         List<Opcion> list = new ArrayList<>();
         try {
             if(type==1){
-                 return (ArrayList<Opcion>) em.createNamedQuery("Permiso.findPermByUserMod",Opcion.class).getResultList();
+                 return (ArrayList<Opcion>) em.createNamedQuery("Permiso.findPermByUserMod",Opcion.class).setParameter("rollId", roll).getResultList();
             }else if(type==2){
-                 return (ArrayList<Opcion>) em.createNamedQuery("Permiso.findPermByUserItem",Opcion.class).getResultList();
+                 return (ArrayList<Opcion>) em.createNamedQuery("Permiso.findPermByUserItem",Opcion.class).setParameter("rollId", roll).getResultList();
             }           
         } catch (NullPointerException e){
             return null;
