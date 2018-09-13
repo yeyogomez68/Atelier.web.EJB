@@ -43,8 +43,9 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
                 mat.setNombre(rqDeta.getMaterialId().getMaterialNombre());
                 lista.add(mat);
             }
-            return null;
+            return lista;
         } catch (Exception e) {
+            e.printStackTrace();
         }
         
         return null;
@@ -67,5 +68,47 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
             e.printStackTrace();
         }
         return false;
+    }
+    
+    public boolean modificarDetalleRequerimiento(String IdRq,List<MaterialRequerimientoUtil> listMaterial, Usuario user){
+        int flag = 0;
+        try {
+            //Elimina los items que no esten.
+            for (Requestdeta rqDeta : em.createNamedQuery("Requestdeta.findByIdRq", Requestdeta.class).setParameter("idRq", Integer.valueOf(IdRq)).getResultList()) {
+                flag=0;
+                for (MaterialRequerimientoUtil mat : listMaterial) {                
+                    if (rqDeta.getMaterialId().getMaterialId()==Integer.parseInt(mat.getMaterialId())) {
+                        flag++;
+                        rqDeta.setRequestDetaCantidad(Float.parseFloat(mat.getCantidad()));
+                        listMaterial.remove(mat);
+                        break;
+                    }
+                } 
+                if(flag==0){
+                    deleteItemdeta(rqDeta);
+                }else if(flag>0){
+                    updateItem(rqDeta);
+                }
+            }
+            crearDetalleRequerimiento(Integer.parseInt(IdRq), listMaterial, user); 
+            return  true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public void deleteItemdeta(Requestdeta rqDeta){
+        try {
+            remove(rqDeta);
+        } catch (Exception e) {
+        }
+    }
+    
+    public void updateItem(Requestdeta rqDeta){
+        try {
+            edit(rqDeta);
+        } catch (Exception e) {
+        }
     }
 }

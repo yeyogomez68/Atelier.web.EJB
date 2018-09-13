@@ -21,41 +21,41 @@ import javax.faces.model.SelectItem;
  * @author jeisson.gomez
  */
 @Stateless
-public class MaterialEJB extends AbstractFacade<Material>{
+public class MaterialEJB extends AbstractFacade<Material> {
 
     public MaterialEJB() {
         super(Material.class);
-    }   
-    
-    public List<Material> getMateriales(){
+    }
+
+    public List<Material> getMateriales() {
         try {
-            return (ArrayList<Material>) em.createNamedQuery("Material.findAll",Material.class).getResultList();
-        } catch (NullPointerException e){
+            return (ArrayList<Material>) em.createNamedQuery("Material.findAll", Material.class).getResultList();
+        } catch (NullPointerException e) {
             return null;
         } catch (Exception e) {
             e.printStackTrace();
-        }       
+        }
         return null;
     }
-    
-    public List<SelectItem> getSelectItemMaterial(){
+
+    public List<SelectItem> getSelectItemMaterial() {
         List<SelectItem> lista = new ArrayList<>();
         try {
-            for(Material mate :(ArrayList<Material>) em.createNamedQuery("Material.findAll",Material.class).getResultList()){
-                lista.add(new SelectItem(mate.getMaterialId(),mate.getMaterialNombre()));
+            for (Material mate : (ArrayList<Material>) em.createNamedQuery("Material.findAll", Material.class).getResultList()) {
+                lista.add(new SelectItem(mate.getMaterialId(), mate.getMaterialNombre()));
             }
             return lista;
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return lista;
         } catch (Exception e) {
             e.printStackTrace();
-        }            
+        }
         return lista;
     }
-    
-    public boolean setCrearMaterial(MaterialUtil material){
+
+    public boolean setCrearMaterial(MaterialUtil material) {
         try {
-            Material mate = new Material();  
+            Material mate = new Material();
             mate.setMaterialNombre(material.getNombre());
             mate.setMaterialReference(material.getReferencia());
             mate.setMaterialTipoId(em.find(Materialtipo.class, Integer.valueOf(material.getTipoId())));
@@ -66,8 +66,8 @@ public class MaterialEJB extends AbstractFacade<Material>{
             return false;
         }
     }
-    
-    public boolean setModificarMaterial(MaterialUtil material){
+
+    public boolean setModificarMaterial(MaterialUtil material) {
         try {
             Material mate = new Material();
             mate = em.find(Material.class, Integer.parseInt(material.getMaterialId()));
@@ -81,11 +81,11 @@ public class MaterialEJB extends AbstractFacade<Material>{
             return false;
         }
     }
-    
-    public List<MaterialRequerimientoUtil> getMaterialesRequerimiento(){
-        List <MaterialRequerimientoUtil> list = new ArrayList<>();
+
+    public List<MaterialRequerimientoUtil> getMaterialesRequerimiento() {
+        List<MaterialRequerimientoUtil> list = new ArrayList<>();
         try {
-            for (Material mat : (ArrayList<Material>) em.createNamedQuery("Material.findAll",Material.class).getResultList()) {
+            for (Material mat : (ArrayList<Material>) em.createNamedQuery("Material.findAll", Material.class).getResultList()) {
                 MaterialRequerimientoUtil util = new MaterialRequerimientoUtil();
                 util.setMaterialId(mat.getMaterialId().toString());
                 util.setNombre(mat.getMaterialNombre());
@@ -96,11 +96,44 @@ public class MaterialEJB extends AbstractFacade<Material>{
                 list.add(util);
             }
             return list;
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return null;
         } catch (Exception e) {
             e.printStackTrace();
-        }       
+        }
         return null;
     }
+
+    public List<MaterialRequerimientoUtil> getMaterialesRequerimientoCross(List<MaterialRequerimientoUtil> target) {
+        List<MaterialRequerimientoUtil> list = new ArrayList<>();
+        int flag = 0;
+        try {
+            for (Material mat : (ArrayList<Material>) em.createNamedQuery("Material.findAll", Material.class).getResultList()) {
+                flag = 0;
+                for (MaterialRequerimientoUtil matRq : target) {
+                    if (mat.getMaterialId() == Integer.parseInt(matRq.getMaterialId())) {
+                        flag++;
+                    }
+                }
+                if (flag == 0) {
+                    MaterialRequerimientoUtil util = new MaterialRequerimientoUtil();
+                    util.setMaterialId(mat.getMaterialId().toString());
+                    util.setNombre(mat.getMaterialNombre());
+                    util.setMarcaId(mat.getMarcaId().getMarcaNombre());
+                    util.setReferencia(mat.getMaterialReference());
+                    util.setTipoId(mat.getMaterialTipoId().getMaterialTipoDescript());
+                    util.setCantidad("0.0");
+                    list.add(util);
+                }
+
+            }
+            return list;
+        } catch (NullPointerException e) {
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
