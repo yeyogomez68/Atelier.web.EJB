@@ -41,6 +41,17 @@ public class EncabezadoRequerimientoEJB extends AbstractFacade<Encabezadorequeri
         return null;
     }
     
+    public List<Encabezadorequerimiento> getRequerimientosByUser(Usuario us){
+        try {
+            return (ArrayList<Encabezadorequerimiento>) em.createNamedQuery("Encabezadorequerimiento.findByUsuarioCreador",Encabezadorequerimiento.class).setParameter("usuarioCreador", us.getUsuarioId()).getResultList();
+        } catch (NullPointerException e){
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }       
+        return null;
+    }
+    
     public Integer setCrearRequerimiento(String desc,Usuario user){        
         try {            
             Encabezadorequerimiento requerimiento = new Encabezadorequerimiento();
