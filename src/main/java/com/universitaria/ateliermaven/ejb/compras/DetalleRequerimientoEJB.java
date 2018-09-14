@@ -12,9 +12,11 @@ import com.universitaria.atelier.web.jpa.Material;
 import com.universitaria.atelier.web.jpa.Requestdeta;
 import com.universitaria.atelier.web.jpa.Usuario;
 import com.universitaria.atelier.web.utils.MaterialRequerimientoUtil;
+import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 
@@ -26,6 +28,8 @@ import javax.ejb.LocalBean;
 @LocalBean
 public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
 
+    @EJB
+    private EncabezadoRequerimientoEJB encabezadoRequerimientoEJB;
     public DetalleRequerimientoEJB() {
         super(Requestdeta.class);
     }
@@ -46,9 +50,18 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
             return lista;
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        
+        }        
         return null;
+    }
+    
+    public List<Requestdeta> obtenerDetalleByIdRq(int Id){
+        List<Requestdeta> lista = new ArrayList<>();
+        try {            
+            return em.createNamedQuery("Requestdeta.findByIdRq", Requestdeta.class).setParameter("idRq", Id).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }        
+        return lista;
     }
     
     public boolean crearDetalleRequerimiento(Integer idEncabeza, List<MaterialRequerimientoUtil> listMaterial, Usuario user){
@@ -56,7 +69,7 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
             for (MaterialRequerimientoUtil mat : listMaterial) {
                 Requestdeta rqDeta = new Requestdeta();
                 rqDeta.setEncabezadoRequerimientoId(em.find(Encabezadorequerimiento.class, idEncabeza));
-                rqDeta.setEstadoId(em.find(Estado.class, 1));
+                rqDeta.setEstadoId(em.find(Estado.class, EstadoEnum.PENDIENTE.getId()));
                 rqDeta.setMaterialId(em.find(Material.class, Integer.parseInt(mat.getMaterialId())));
                 rqDeta.setRequestDetaFecha(new Timestamp(System.currentTimeMillis()));
                 rqDeta.setUsuarioId(user.getUsuarioId());
@@ -98,17 +111,69 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
         return false;
     }
     
-    public void deleteItemdeta(Requestdeta rqDeta){
+    private void deleteItemdeta(Requestdeta rqDeta){
         try {
             remove(rqDeta);
         } catch (Exception e) {
         }
     }
     
-    public void updateItem(Requestdeta rqDeta){
+    private void updateItem(Requestdeta rqDeta){
         try {
             edit(rqDeta);
         } catch (Exception e) {
         }
     }
+    
+    public boolean aprobarItem(Requestdeta rqDeta){
+        try {
+            rqDeta.setEstadoId(em.find(Estado.class, EstadoEnum.APROBADO.getId()));            
+            updateItem(rqDeta);
+            validateStateRQ(rqDeta.getEncabezadoRequerimientoId());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    public boolean rechazarItem(Requestdeta rqDeta){
+        try {
+            rqDeta.setEstadoId(em.find(Estado.class, EstadoEnum.RECHAZADO.getId()));
+            updateItem(rqDeta);
+            validateStateRQ(rqDeta.getEncabezadoRequerimientoId());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }        
+    }
+    
+    public void validateStateRQ(Encabezadorequerimiento rqId){
+        int ap=0, re=0, pe=0;
+        List<Requestdeta> lista = new ArrayList<>();
+        lista = obtenerDetalleByIdRq(rqId.getEncabezadoRequerimientoId());
+        try {
+            for (Requestdeta rqDeta : lista) {
+                if(rqDeta.getEstadoId().getEstadoId()==EstadoEnum.APROBADO.getId()){
+                    ap++;
+                }else if(rqDeta.getEstadoId().getEstadoId()==EstadoEnum.RECHAZADO.getId()){
+                    re++;
+                }else if(rqDeta.getEstadoId().getEstadoId()==EstadoEnum.PENDIENTE.getId()){
+                    pe++;
+                }
+            }           
+            if(re==lista.size()){
+                rqId.setEstadoId(em.find(Estado.class,EstadoEnum.RECHAZADO.getId()));                
+            }else if(ap==lista.size()){
+                rqId.setEstadoId(em.find(Estado.class,EstadoEnum.APROBADO.getId()));                
+            }else if(pe==0){
+                rqId.setEstadoId(em.find(Estado.class,EstadoEnum.CONDICIONADO.getId()));                
+            }else{
+                rqId.setEstadoId(em.find(Estado.class,EstadoEnum.EN_APROBACION.getId()));                
+            }            
+            encabezadoRequerimientoEJB.edit(rqId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 }

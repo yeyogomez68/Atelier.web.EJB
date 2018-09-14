@@ -9,6 +9,7 @@ import com.universitaria.atelier.web.jpa.AbstractFacade;
 import com.universitaria.atelier.web.jpa.Encabezadorequerimiento;
 import com.universitaria.atelier.web.jpa.Estado;
 import com.universitaria.atelier.web.jpa.Usuario;
+import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -58,7 +59,7 @@ public class EncabezadoRequerimientoEJB extends AbstractFacade<Encabezadorequeri
             requerimiento.setEncabezadoRequerimientoDeta(desc);
             requerimiento.setUsuarioId(user);
             requerimiento.setUsuarioCreador(user.getUsuarioId());
-            requerimiento.setEstadoId(em.find(Estado.class, 1));
+            requerimiento.setEstadoId(em.find(Estado.class, EstadoEnum.PENDIENTE.getId()));
             create(requerimiento);
             return requerimiento.getEncabezadoRequerimientoId();
         } catch (Exception e) {
@@ -76,5 +77,24 @@ public class EncabezadoRequerimientoEJB extends AbstractFacade<Encabezadorequeri
         } catch (Exception e) {
         }
         return false;
+    }
+    
+    public void setEditarRq(Encabezadorequerimiento rq){
+        try {
+            edit(rq);
+        } catch (Exception e) {
+        }
+    }
+    
+    public void actualizarRechazado(){
+    
+    }
+    
+    public void actualizarAprobado(){
+    
+    }
+    
+    public void actualizarEnAprobacion(){
+    
     }
 }
