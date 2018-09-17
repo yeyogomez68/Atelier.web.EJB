@@ -135,5 +135,30 @@ public class MaterialEJB extends AbstractFacade<Material> {
         }
         return null;
     }
+    
+    
+    
+       public List<MaterialUtil> getMaterialesUtil() {
+        List<MaterialUtil> list = new ArrayList<>();
+        try {
+            for (Material mat : (ArrayList<Material>) em.createNamedQuery("Material.findAll", Material.class).getResultList()) {
+                MaterialUtil util = new MaterialUtil();
+                util.setMaterialId(mat.getMaterialId().toString());
+                util.setNombre(mat.getMaterialNombre());
+                util.setMarcaId(mat.getMarcaId().getMarcaNombre());
+                util.setReferencia(mat.getMaterialReference());
+                util.setTipoId(mat.getMaterialTipoId().getMaterialTipoDescript());
+                util.setCantidad("0");
+                list.add(util);
+            }
+            return list;
+        } catch (NullPointerException e) {
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
 
 }

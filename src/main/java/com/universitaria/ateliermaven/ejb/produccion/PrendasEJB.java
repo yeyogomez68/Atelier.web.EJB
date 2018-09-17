@@ -93,4 +93,30 @@ public class PrendasEJB extends AbstractFacade<Prenda> {
         return false;
     }
 
+    public List<PrendaUtil> getPrendasProduccion() {
+        List<PrendaUtil> list = new ArrayList<>();
+        try {
+            for (Prenda prenda : (ArrayList<Prenda>) em.createNamedQuery("Prenda.findAll", Prenda.class).getResultList()) {
+                PrendaUtil util = new PrendaUtil();
+                util.setCantidad("0");
+                util.setColorId(String.valueOf(prenda.getColorId().getColorId()));
+                util.setEstadoId(String.valueOf(prenda.getEstadoId().getEstadoId()));
+                util.setMaterialId(String.valueOf(prenda.getMaterialId().getMaterialId()));
+                util.setOcasionId(String.valueOf(prenda.getOcasionId().getOcasionId()));
+                util.setPrendaDescripcion(prenda.getPrendaDescripcion());
+                util.setPrendaId(String.valueOf(prenda.getPrendaId()));
+                util.setPrendaNombre(prenda.getPrendaNombre());
+                util.setPrendaTipoId(String.valueOf(prenda.getPrendaTipoId().getPrendaTipoId()));
+                util.setCantidad("0");
+                list.add(util);
+            }
+            return list;
+        } catch (NullPointerException e) {
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

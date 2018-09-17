@@ -16,6 +16,8 @@ public class MaterialUtil {
     private String referencia;
     private String marcaId;
     private String tipoId;
+    private String cantidad;
+    private String usuarioId;
 
     public String getMaterialId() {
         return materialId;
@@ -56,6 +58,24 @@ public class MaterialUtil {
     public void setTipoId(String tipoId) {
         this.tipoId = tipoId;
     }
+
+    public String getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(String cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public String getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(String usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+    
+    
     
     
 }

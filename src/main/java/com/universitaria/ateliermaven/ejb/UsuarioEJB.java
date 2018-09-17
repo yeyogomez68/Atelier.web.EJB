@@ -93,4 +93,19 @@ public class UsuarioEJB extends AbstractFacade<Usuario> {
         return lista;
     }
 
+    public List<SelectItem> getSelectItemUsuarios(String roll) {
+        List<SelectItem> lista = new ArrayList<>();
+        try {
+            for (Usuario usuario : (ArrayList<Usuario>) em.createNamedQuery("Usuario.findByRoll", Usuario.class).setParameter("rollId", roll).getResultList()) {
+                lista.add(new SelectItem(usuario.getUsuarioId(), usuario.getUsuarioNombre() + " " + usuario.getUsuarioApellido()));
+            }
+            return lista;
+        } catch (NullPointerException e) {
+            return lista;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
 }

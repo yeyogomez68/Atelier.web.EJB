@@ -19,6 +19,8 @@ public class PrendaUtil {
     private String prendaDescripcion;
     private String ocasionId;
     private String estadoId;
+    private String cantidad;
+    private String usuarioId;
 
     public String getPrendaId() {
         return prendaId;
@@ -82,6 +84,22 @@ public class PrendaUtil {
 
     public void setEstadoId(String estadoId) {
         this.estadoId = estadoId;
+    }
+
+    public String getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(String cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public String getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(String usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
 }

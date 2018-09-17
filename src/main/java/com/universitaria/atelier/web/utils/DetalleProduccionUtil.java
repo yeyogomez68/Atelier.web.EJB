@@ -18,6 +18,8 @@ public class DetalleProduccionUtil {
     private String produccionDetaCant;
     private Date produccionDetaFecha;
     private String produccionId;
+    private String usuarioId;
+    private String estadoId;
 
     public String getProduccionDetaId() {
         return produccionDetaId;
@@ -59,5 +61,20 @@ public class DetalleProduccionUtil {
         this.produccionId = produccionId;
     }
 
-    
+    public String getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(String usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
+    public String getEstadoId() {
+        return estadoId;
+    }
+
+    public void setEstadoId(String estadoId) {
+        this.estadoId = estadoId;
+    }
+
 }
