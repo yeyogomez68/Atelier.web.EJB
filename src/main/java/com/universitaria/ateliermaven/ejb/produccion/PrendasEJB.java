@@ -12,11 +12,16 @@ import com.universitaria.atelier.web.jpa.Material;
 import com.universitaria.atelier.web.jpa.Ocasion;
 import com.universitaria.atelier.web.jpa.Prenda;
 import com.universitaria.atelier.web.jpa.Prendatipo;
+import com.universitaria.atelier.web.jpa.Stockprenda;
+import com.universitaria.atelier.web.jpa.Talla;
 import com.universitaria.atelier.web.utils.PrendaUtil;
+import com.universitaria.ateliermaven.ejb.inventario.StockPrendaEJB;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.faces.model.SelectItem;
+import javax.persistence.NoResultException;
 
 /**
  *
@@ -24,6 +29,9 @@ import javax.faces.model.SelectItem;
  */
 @Stateless
 public class PrendasEJB extends AbstractFacade<Prenda> {
+
+    @EJB
+    private StockPrendaEJB stockPrendaEJB;
 
     public PrendasEJB() {
         super(Prenda.class);
@@ -66,7 +74,14 @@ public class PrendasEJB extends AbstractFacade<Prenda> {
             prenda.setPrendaDescripcion(prendaUtil.getPrendaDescripcion());
             prenda.setOcasionId(em.find(Ocasion.class, Integer.parseInt(prendaUtil.getOcasionId())));
             prenda.setEstadoId(em.find(Estado.class, Integer.parseInt(prendaUtil.getEstadoId())));
+            prenda.setTallaId(em.find(Talla.class, Integer.parseInt(prendaUtil.getTallaId())));
             create(prenda);
+            Stockprenda sp = new Stockprenda();
+            sp.setStockPrendaCant(Float.valueOf(0));
+            sp.setPrendaId(em.createNamedQuery("Prenda.findByPrendaNombre", Prenda.class).setParameter("prendaNombre", prendaUtil.getPrendaNombre()).getSingleResult());
+            sp.setTallaId(em.find(Talla.class, Integer.parseInt(prendaUtil.getTallaId())));
+            stockPrendaEJB.setCrearStockPrenda(sp);
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -77,6 +92,9 @@ public class PrendasEJB extends AbstractFacade<Prenda> {
     public boolean existePrenda(String prendaNombre) {
         try {
             return (em.createNamedQuery("Prenda.findByPrendaNombre").setParameter("prendaNombre", prendaNombre).getSingleResult() != null);
+        } catch (NoResultException nre) {
+            System.out.println("com.universitaria.ateliermaven.ejb.produccion.PrendasEJB.existePrenda()");
+            nre.getMessage();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,6 +135,14 @@ public class PrendasEJB extends AbstractFacade<Prenda> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public StockPrendaEJB getStockPrendaEJB() {
+        return stockPrendaEJB;
+    }
+
+    public void setStockPrendaEJB(StockPrendaEJB stockPrendaEJB) {
+        this.stockPrendaEJB = stockPrendaEJB;
     }
 
 }

@@ -19,6 +19,7 @@ public class PrendaUtil {
     private String prendaDescripcion;
     private String ocasionId;
     private String estadoId;
+    private String tallaId;
     private String cantidad;
     private String usuarioId;
 
@@ -100,6 +101,14 @@ public class PrendaUtil {
 
     public void setUsuarioId(String usuarioId) {
         this.usuarioId = usuarioId;
+    }
+
+    public String getTallaId() {
+        return tallaId;
+    }
+
+    public void setTallaId(String tallaId) {
+        this.tallaId = tallaId;
     }
 
 }
