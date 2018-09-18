@@ -7,13 +7,17 @@ package com.universitaria.ateliermaven.ejb.produccion;
 
 import com.universitaria.atelier.web.jpa.AbstractFacade;
 import com.universitaria.atelier.web.jpa.Estado;
+import com.universitaria.atelier.web.jpa.Prenda;
 import com.universitaria.atelier.web.jpa.Produccion;
+import com.universitaria.atelier.web.jpa.Producciondeta;
 import com.universitaria.atelier.web.jpa.Usuario;
 import com.universitaria.atelier.web.utils.ProduccionUtil;
-import java.sql.Timestamp;
+import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
+import com.universitaria.ateliermaven.ejb.inventario.StockPrendaEJB;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
@@ -24,6 +28,11 @@ import javax.persistence.NoResultException;
  */
 @Stateless
 public class ProduccionEJB extends AbstractFacade<Produccion> {
+
+    @EJB
+    DetalleProduccionEJB detalleProduccionEJB;
+    @EJB
+    StockPrendaEJB stockPrendaEJB;
 
     public ProduccionEJB() {
         super(Produccion.class);
@@ -64,6 +73,7 @@ public class ProduccionEJB extends AbstractFacade<Produccion> {
             produccion.setProduccionDiaEstimated(Float.parseFloat(produccionUtil.getProduccionDiaEstimated()));
             produccion.setEstadoId(em.find(Estado.class, Integer.parseInt(produccionUtil.getEstadoId())));
             produccion.setAvance(Integer.parseInt(produccionUtil.getAvance()));
+            produccion.setPrendaId(em.find(Prenda.class, Integer.parseInt(produccionUtil.getPrendaId())));
             Usuario usuario = em.find(Usuario.class, Integer.parseInt(produccionUtil.getUsuarioCreador()));
             produccion.setUsuarioCreador(usuario);
             produccion.setProduccionDescripcion(produccionUtil.getProduccionDescripcion());
@@ -99,10 +109,28 @@ public class ProduccionEJB extends AbstractFacade<Produccion> {
 
     public boolean setModificarProduccion(Produccion produccion, String estadoId) {
         try {
-            Estado estado = em.find(Estado.class, Integer.parseInt(estadoId));
-            produccion.setEstadoId(estado);
-            edit(produccion);
-            return true;
+            if (produccion.getEstadoId().getEstadoId() != EstadoEnum.APROBADO.getId()) {
+                if (Integer.parseInt(estadoId) == EstadoEnum.INACTIVO.getId()) {
+                    List<Producciondeta> pdl = detalleProduccionEJB.getProduccionDetaforProduccion(produccion);
+                    if (pdl != null && !pdl.isEmpty()) {
+                        for (Producciondeta pd : pdl) {
+                            if (pd.getEstadoId().getEstadoId() == EstadoEnum.ACTIVO.getId()) {
+                                detalleProduccionEJB.setModificarDetalleProduccion(pd, String.valueOf(pd.getUsuarioAsignado().getUsuarioId()), String.valueOf(EstadoEnum.INACTIVO.getId()));
+                            }
+                        }
+                    }
+                }
+
+                if (Integer.parseInt(estadoId) == EstadoEnum.APROBADO.getId()) {
+                    stockPrendaEJB.setModificarStockPrenda(produccion.getPrendaId(), 1);
+                }
+
+                Estado estado = em.find(Estado.class, Integer.parseInt(estadoId));
+
+                produccion.setEstadoId(estado);
+                edit(produccion);
+                return true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

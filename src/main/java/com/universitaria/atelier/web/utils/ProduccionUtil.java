@@ -21,6 +21,7 @@ public class ProduccionUtil {
     private String estadoId;
     private String usuarioCreador;
     private String produccionDescripcion;
+    private String prendaId;
     private String avance;
 
     public String getProduccionId() {
@@ -85,6 +86,14 @@ public class ProduccionUtil {
 
     public void setAvance(String avance) {
         this.avance = avance;
+    }
+
+    public String getPrendaId() {
+        return prendaId;
+    }
+
+    public void setPrendaId(String prendaId) {
+        this.prendaId = prendaId;
     }
 
 }
