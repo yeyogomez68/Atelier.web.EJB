@@ -10,9 +10,11 @@ import com.universitaria.atelier.web.jpa.Estado;
 import com.universitaria.atelier.web.jpa.Material;
 import com.universitaria.atelier.web.jpa.Produccion;
 import com.universitaria.atelier.web.jpa.Producciondeta;
+import com.universitaria.atelier.web.jpa.Stockmateriales;
 import com.universitaria.atelier.web.jpa.Usuario;
 import com.universitaria.atelier.web.utils.DetalleProduccionUtil;
 import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
+import com.universitaria.ateliermaven.ejb.inventario.StockMaterialesEJB;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +31,8 @@ public class DetalleProduccionEJB extends AbstractFacade<Producciondeta> {
 
     @EJB
     private ProduccionEJB produccionEJB;
+    @EJB
+    private StockMaterialesEJB stockMaterialesEJB;
 
     public DetalleProduccionEJB() {
         super(Producciondeta.class);
@@ -63,19 +67,24 @@ public class DetalleProduccionEJB extends AbstractFacade<Producciondeta> {
     public boolean setCrearDetalleProduccion(DetalleProduccionUtil detalleProduccionUtil) {
         try {
             Producciondeta produccionDeta = new Producciondeta();
-
-            produccionDeta.setMaterialId(em.find(Material.class, Integer.parseInt(detalleProduccionUtil.getMaterialId())));
-            produccionDeta.setProduccionId(em.find(Produccion.class, Integer.parseInt(detalleProduccionUtil.getProduccionId())));
-            produccionDeta.setProduccionDetaCant(Integer.parseInt(detalleProduccionUtil.getProduccionDetaCant()));
-            produccionDeta.setProduccionDetaFecha(detalleProduccionUtil.getProduccionDetaFecha());
-            produccionDeta.setEstadoId(em.find(Estado.class, Integer.parseInt(detalleProduccionUtil.getEstadoId())));
-            produccionDeta.setUsuarioAsignado(em.find(Usuario.class, Integer.parseInt(detalleProduccionUtil.getUsuarioId())));
-            int avc = calcularAvance(produccionDeta, detalleProduccionUtil.getEstadoId());
-            Produccion np = produccionDeta.getProduccionId();
-            np.setAvance(avc);
-            produccionEJB.setModificarProduccion(np, String.valueOf((avc == 100 ? EstadoEnum.INACTIVO.getId() : EstadoEnum.ACTIVO.getId())));
-            create(produccionDeta);
-            return true;
+            Material material = em.find(Material.class, Integer.parseInt(detalleProduccionUtil.getMaterialId()));
+            int cantidad = Integer.parseInt(detalleProduccionUtil.getProduccionDetaCant());
+            Stockmateriales sm = stockMaterialesEJB.getStockMaterial(material);
+            if (sm.getCantidad() >= cantidad) {
+                produccionDeta.setMaterialId(material);
+                produccionDeta.setProduccionId(em.find(Produccion.class, Integer.parseInt(detalleProduccionUtil.getProduccionId())));
+                produccionDeta.setProduccionDetaCant(cantidad);
+                produccionDeta.setProduccionDetaFecha(detalleProduccionUtil.getProduccionDetaFecha());
+                produccionDeta.setEstadoId(em.find(Estado.class, Integer.parseInt(detalleProduccionUtil.getEstadoId())));
+                produccionDeta.setUsuarioAsignado(em.find(Usuario.class, Integer.parseInt(detalleProduccionUtil.getUsuarioId())));
+                int avc = calcularAvance(produccionDeta, detalleProduccionUtil.getEstadoId());
+                Produccion np = produccionDeta.getProduccionId();
+                np.setAvance(avc);
+                produccionEJB.setModificarProduccion(np, String.valueOf((avc == 100 ? EstadoEnum.INACTIVO.getId() : EstadoEnum.ACTIVO.getId())));
+                create(produccionDeta);
+                stockMaterialesEJB.setModificarStockMaterial(material, -cantidad);
+                return true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
