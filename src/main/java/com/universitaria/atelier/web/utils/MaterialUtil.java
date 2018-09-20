@@ -10,7 +10,7 @@ package com.universitaria.atelier.web.utils;
  * @author jeisson.gomez
  */
 public class MaterialUtil {
-    
+
     private String materialId;
     private String nombre;
     private String referencia;
@@ -18,6 +18,7 @@ public class MaterialUtil {
     private String tipoId;
     private String cantidad;
     private String usuarioId;
+    private String ubicacion;
 
     public String getMaterialId() {
         return materialId;
@@ -26,7 +27,7 @@ public class MaterialUtil {
     public void setMaterialId(String materialId) {
         this.materialId = materialId;
     }
-    
+
     public String getNombre() {
         return nombre;
     }
@@ -74,8 +75,13 @@ public class MaterialUtil {
     public void setUsuarioId(String usuarioId) {
         this.usuarioId = usuarioId;
     }
-    
-    
-    
-    
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
 }

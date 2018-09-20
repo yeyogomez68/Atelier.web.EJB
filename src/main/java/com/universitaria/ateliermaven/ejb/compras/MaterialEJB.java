@@ -9,12 +9,16 @@ import com.universitaria.atelier.web.jpa.AbstractFacade;
 import com.universitaria.atelier.web.jpa.Marca;
 import com.universitaria.atelier.web.jpa.Material;
 import com.universitaria.atelier.web.jpa.Materialtipo;
+import com.universitaria.atelier.web.jpa.Stockmateriales;
 import com.universitaria.atelier.web.utils.MaterialRequerimientoUtil;
 import com.universitaria.atelier.web.utils.MaterialUtil;
+import com.universitaria.ateliermaven.ejb.inventario.StockMaterialesEJB;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.faces.model.SelectItem;
+import javax.persistence.NoResultException;
 
 /**
  *
@@ -22,6 +26,17 @@ import javax.faces.model.SelectItem;
  */
 @Stateless
 public class MaterialEJB extends AbstractFacade<Material> {
+
+    @EJB
+    private StockMaterialesEJB stockMaterialesEJB;
+
+    public StockMaterialesEJB getStockMaterialesEJB() {
+        return stockMaterialesEJB;
+    }
+
+    public void setStockMaterialesEJB(StockMaterialesEJB stockMaterialesEJB) {
+        this.stockMaterialesEJB = stockMaterialesEJB;
+    }
 
     public MaterialEJB() {
         super(Material.class);
@@ -60,7 +75,12 @@ public class MaterialEJB extends AbstractFacade<Material> {
             mate.setMaterialReference(material.getReferencia());
             mate.setMaterialTipoId(em.find(Materialtipo.class, Integer.valueOf(material.getTipoId())));
             mate.setMarcaId(em.find(Marca.class, Integer.valueOf(material.getMarcaId())));
+            mate.setUbicacion(material.getUbicacion());
             create(mate);
+            Material smaterial = em.createNamedQuery("Material.findByMaterialReference", Material.class).setParameter("materialReference", mate.getMaterialReference()).getSingleResult();
+            Stockmateriales sm = new Stockmateriales();
+            sm.setMaterialId(smaterial);
+            stockMaterialesEJB.setCrearStockMaterial(sm);
             return true;
         } catch (Exception e) {
             return false;
@@ -69,8 +89,7 @@ public class MaterialEJB extends AbstractFacade<Material> {
 
     public boolean setModificarMaterial(MaterialUtil material) {
         try {
-            Material mate = new Material();
-            mate = em.find(Material.class, Integer.parseInt(material.getMaterialId()));
+            Material mate = em.find(Material.class, Integer.parseInt(material.getMaterialId()));
             mate.setMaterialNombre(material.getNombre());
             mate.setMaterialReference(material.getReferencia());
             mate.setMaterialTipoId(em.find(Materialtipo.class, Integer.valueOf(material.getTipoId())));
@@ -135,10 +154,8 @@ public class MaterialEJB extends AbstractFacade<Material> {
         }
         return null;
     }
-    
-    
-    
-       public List<MaterialUtil> getMaterialesUtil() {
+
+    public List<MaterialUtil> getMaterialesUtil() {
         List<MaterialUtil> list = new ArrayList<>();
         try {
             for (Material mat : (ArrayList<Material>) em.createNamedQuery("Material.findAll", Material.class).getResultList()) {
@@ -159,6 +176,17 @@ public class MaterialEJB extends AbstractFacade<Material> {
         }
         return null;
     }
-    
+
+    public boolean existeMaterial(String referencia) {
+        try {
+            return (em.createNamedQuery("Material.findByMaterialReference").setParameter("materialReference", referencia).getSingleResult() != null);
+        } catch (NoResultException nre) {
+            System.out.println("com.universitaria.ateliermaven.ejb.compras.MaterialEJB.existeMaterial()");
+            nre.getMessage();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }

@@ -14,7 +14,6 @@ public class PrendaUtil {
     private String prendaId;
     private String prendaNombre;
     private String prendaTipoId;
-    private String materialId;
     private String colorId;
     private String prendaDescripcion;
     private String ocasionId;
@@ -22,6 +21,8 @@ public class PrendaUtil {
     private String tallaId;
     private String cantidad;
     private String usuarioId;
+    private String URL;
+    private String ubicacion;
 
     public String getPrendaId() {
         return prendaId;
@@ -45,14 +46,6 @@ public class PrendaUtil {
 
     public void setPrendaTipoId(String prendaTipoId) {
         this.prendaTipoId = prendaTipoId;
-    }
-
-    public String getMaterialId() {
-        return materialId;
-    }
-
-    public void setMaterialId(String materialId) {
-        this.materialId = materialId;
     }
 
     public String getColorId() {
@@ -109,6 +102,22 @@ public class PrendaUtil {
 
     public void setTallaId(String tallaId) {
         this.tallaId = tallaId;
+    }
+
+    public String getURL() {
+        return URL;
+    }
+
+    public void setURL(String URL) {
+        this.URL = URL;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 
 }

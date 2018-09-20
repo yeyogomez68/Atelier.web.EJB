@@ -3,44 +3,33 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.universitaria.ateliermaven.ejb.produccion;
+package com.universitaria.ateliermaven.ejb.alquilerventas;
 
 import com.universitaria.atelier.web.jpa.AbstractFacade;
-import com.universitaria.atelier.web.jpa.Estado;
-import com.universitaria.atelier.web.jpa.Prenda;
-import com.universitaria.atelier.web.jpa.Produccion;
-import com.universitaria.atelier.web.jpa.Producciondeta;
-import com.universitaria.atelier.web.jpa.Usuario;
-import com.universitaria.atelier.web.utils.ProduccionUtil;
-import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
+import com.universitaria.atelier.web.jpa.Renta;
 import com.universitaria.ateliermaven.ejb.inventario.StockPrendaEJB;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.faces.model.SelectItem;
-import javax.persistence.NoResultException;
 
 /**
  *
  * @author SoulHunter
  */
 @Stateless
-public class ProduccionEJB extends AbstractFacade<Produccion> {
+public class RentaEJB extends AbstractFacade<Renta> {
 
-    @EJB
-    private DetalleProduccionEJB detalleProduccionEJB;
+    public RentaEJB() {
+        super(Renta.class);
+    }
+
     @EJB
     private StockPrendaEJB stockPrendaEJB;
 
-    public ProduccionEJB() {
-        super(Produccion.class);
-    }
-
-    public List<Produccion> getProduccion() {
+    public List<Renta> getRentas() {
         try {
-            return (ArrayList<Produccion>) em.createNamedQuery("Produccion.findAll", Produccion.class).getResultList();
+            return (ArrayList<Renta>) em.createNamedQuery("Renta.findAll", Renta.class).getResultList();
         } catch (NullPointerException e) {
             return null;
         } catch (Exception e) {
@@ -49,7 +38,7 @@ public class ProduccionEJB extends AbstractFacade<Produccion> {
         return null;
     }
 
-    public List<SelectItem> getSelectItemProduccion() {
+    /*public List<SelectItem> getSelectItemProduccion() {
         List<SelectItem> lista = new ArrayList<>();
         try {
             for (Produccion produccion : (ArrayList<Produccion>) em.createNamedQuery("Produccion.findAll", Produccion.class).getResultList()) {
@@ -137,4 +126,5 @@ public class ProduccionEJB extends AbstractFacade<Produccion> {
         return false;
     }
 
+     */
 }

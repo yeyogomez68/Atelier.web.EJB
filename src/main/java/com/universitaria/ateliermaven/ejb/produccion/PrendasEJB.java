@@ -69,12 +69,13 @@ public class PrendasEJB extends AbstractFacade<Prenda> {
 
             prenda.setPrendaNombre(prendaUtil.getPrendaNombre());
             prenda.setPrendaTipoId(em.find(Prendatipo.class, Integer.parseInt(prendaUtil.getPrendaTipoId())));
-            prenda.setMaterialId(em.find(Material.class, Integer.parseInt(prendaUtil.getMaterialId())));
             prenda.setColorId(em.find(Color.class, Integer.parseInt(prendaUtil.getColorId())));
             prenda.setPrendaDescripcion(prendaUtil.getPrendaDescripcion());
             prenda.setOcasionId(em.find(Ocasion.class, Integer.parseInt(prendaUtil.getOcasionId())));
             prenda.setEstadoId(em.find(Estado.class, Integer.parseInt(prendaUtil.getEstadoId())));
             prenda.setTallaId(em.find(Talla.class, Integer.parseInt(prendaUtil.getTallaId())));
+            prenda.setUbicacion(prendaUtil.getUbicacion());
+            prenda.setUrl(prendaUtil.getURL());
             create(prenda);
             Stockprenda sp = new Stockprenda();
             sp.setStockPrendaCant(Float.valueOf(0));
@@ -119,7 +120,6 @@ public class PrendasEJB extends AbstractFacade<Prenda> {
                 util.setCantidad("0");
                 util.setColorId(String.valueOf(prenda.getColorId().getColorId()));
                 util.setEstadoId(String.valueOf(prenda.getEstadoId().getEstadoId()));
-                util.setMaterialId(String.valueOf(prenda.getMaterialId().getMaterialId()));
                 util.setOcasionId(String.valueOf(prenda.getOcasionId().getOcasionId()));
                 util.setPrendaDescripcion(prenda.getPrendaDescripcion());
                 util.setPrendaId(String.valueOf(prenda.getPrendaId()));
@@ -143,6 +143,19 @@ public class PrendasEJB extends AbstractFacade<Prenda> {
 
     public void setStockPrendaEJB(StockPrendaEJB stockPrendaEJB) {
         this.stockPrendaEJB = stockPrendaEJB;
+    }
+
+    public Prenda traerPrendaNombre(String nombre) {
+
+        try {
+            return em.createNamedQuery("Prenda.findByPrendaNombre", Prenda.class).setParameter("prendaNombre", nombre).getSingleResult();
+        } catch (NoResultException nre) {
+            System.out.println("com.universitaria.ateliermaven.ejb.produccion.PrendasEJB.traerPrendaNombre()");
+            nre.getMessage();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
