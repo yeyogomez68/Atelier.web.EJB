@@ -6,7 +6,11 @@
 package com.universitaria.ateliermaven.ejb.alquilerventas;
 
 import com.universitaria.atelier.web.jpa.AbstractFacade;
+import com.universitaria.atelier.web.jpa.Estado;
 import com.universitaria.atelier.web.jpa.Renta;
+import com.universitaria.atelier.web.jpa.Rentadeta;
+import com.universitaria.atelier.web.jpa.Reservacion;
+import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
 import com.universitaria.ateliermaven.ejb.inventario.StockPrendaEJB;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +24,12 @@ import javax.ejb.Stateless;
 @Stateless
 public class RentaEJB extends AbstractFacade<Renta> {
 
+    @EJB
+    private DetalleRentaEJB detalleRentaEJB;
+
     public RentaEJB() {
         super(Renta.class);
     }
-
-    @EJB
-    private StockPrendaEJB stockPrendaEJB;
 
     public List<Renta> getRentas() {
         try {
@@ -38,36 +42,21 @@ public class RentaEJB extends AbstractFacade<Renta> {
         return null;
     }
 
-    /*public List<SelectItem> getSelectItemProduccion() {
-        List<SelectItem> lista = new ArrayList<>();
+    public List<Renta> getRentasActivas() {
         try {
-            for (Produccion produccion : (ArrayList<Produccion>) em.createNamedQuery("Produccion.findAll", Produccion.class).getResultList()) {
-                lista.add(new SelectItem(produccion.getProduccionId(), produccion.getProduccionDescripcion()));
-            }
-            return lista;
+            return (ArrayList<Renta>) em.createNamedQuery("Renta.findByRentaEstadoId", Renta.class).setParameter("estadoId", em.find(Estado.class, EstadoEnum.ALQUILADO.getId())).getResultList();
         } catch (NullPointerException e) {
-            return lista;
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return lista;
+        return null;
     }
 
-    public boolean setCrearProduccion(ProduccionUtil produccionUtil) {
+    public boolean reintegrarRenta(Renta renta) {
         try {
-            Produccion produccion = new Produccion();
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(produccionUtil.getProduccionFechaDate());
-            produccion.setProduccionFecha(cal);
-            produccion.setProduccionDiaEstimated(Float.parseFloat(produccionUtil.getProduccionDiaEstimated()));
-            produccion.setEstadoId(em.find(Estado.class, Integer.parseInt(produccionUtil.getEstadoId())));
-            produccion.setAvance(Integer.parseInt(produccionUtil.getAvance()));
-            produccion.setPrendaId(em.find(Prenda.class, Integer.parseInt(produccionUtil.getPrendaId())));
-            Usuario usuario = em.find(Usuario.class, Integer.parseInt(produccionUtil.getUsuarioCreador()));
-            produccion.setUsuarioCreador(usuario);
-            produccion.setProduccionDescripcion(produccionUtil.getProduccionDescripcion());
-
-            create(produccion);
+            renta.setEstadoId(em.find(Estado.class, EstadoEnum.RETORNADO.getId()));
+            edit(renta);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,56 +64,19 @@ public class RentaEJB extends AbstractFacade<Renta> {
         return false;
     }
 
-    public boolean existeProduccion(String produccionDescripcion) {
+    public boolean setCrearRentaReservacion(Renta renta, Reservacion reservacion) {
         try {
-            return (em.createNamedQuery("Produccion.findByProduccionDescripcion").setParameter("produccionDescripcion", produccionDescripcion).getSingleResult() != null);
-        } catch (NoResultException nre) {
-            System.out.println("com.universitaria.ateliermaven.ejb.produccion.ProduccionEJB.existeProduccion()");
-            System.err.println(nre.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public Produccion traerProduccionDes(String produccionDescripcion) {
-        try {
-            return (Produccion) em.createNamedQuery("Produccion.findByProduccionDescripcion").setParameter("produccionDescripcion", produccionDescripcion).getSingleResult();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public boolean setModificarProduccion(Produccion produccion, String estadoId) {
-        try {
-            if (produccion.getEstadoId().getEstadoId() != EstadoEnum.APROBADO.getId()) {
-                if (Integer.parseInt(estadoId) == EstadoEnum.INACTIVO.getId()) {
-                    List<Producciondeta> pdl = detalleProduccionEJB.getProduccionDetaforProduccion(produccion);
-                    if (pdl != null && !pdl.isEmpty()) {
-                        for (Producciondeta pd : pdl) {
-                            if (pd.getEstadoId().getEstadoId() == EstadoEnum.ACTIVO.getId()) {
-                                detalleProduccionEJB.setModificarDetalleProduccion(pd, String.valueOf(pd.getUsuarioAsignado().getUsuarioId()), String.valueOf(EstadoEnum.INACTIVO.getId()));
-                            }
-                        }
-                    }
-                }
-
-                if (Integer.parseInt(estadoId) == EstadoEnum.APROBADO.getId()) {
-                    stockPrendaEJB.setModificarStockPrenda(produccion.getPrendaId(), 1);
-                }
-
-                Estado estado = em.find(Estado.class, Integer.parseInt(estadoId));
-
-                produccion.setEstadoId(estado);
-                edit(produccion);
+            create(renta);
+            if (detalleRentaEJB.setCrearDetalleRentaReservacion(renta, reservacion)) {
                 return true;
+            } else {
+                remove(renta);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
     }
 
-     */
 }

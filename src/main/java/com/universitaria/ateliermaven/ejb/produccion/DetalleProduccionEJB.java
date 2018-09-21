@@ -73,7 +73,7 @@ public class DetalleProduccionEJB extends AbstractFacade<Producciondeta> {
             if (sm.getCantidad() >= cantidad) {
                 produccionDeta.setMaterialId(material);
                 produccionDeta.setProduccionId(em.find(Produccion.class, Integer.parseInt(detalleProduccionUtil.getProduccionId())));
-                produccionDeta.setProduccionDetaCant(cantidad);
+                produccionDeta.setProduccionDetaCant(new Float(cantidad));
                 produccionDeta.setProduccionDetaFecha(detalleProduccionUtil.getProduccionDetaFecha());
                 produccionDeta.setEstadoId(em.find(Estado.class, Integer.parseInt(detalleProduccionUtil.getEstadoId())));
                 produccionDeta.setUsuarioAsignado(em.find(Usuario.class, Integer.parseInt(detalleProduccionUtil.getUsuarioId())));

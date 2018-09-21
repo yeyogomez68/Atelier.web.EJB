@@ -77,7 +77,6 @@ public class ProduccionEJB extends AbstractFacade<Produccion> {
             Usuario usuario = em.find(Usuario.class, Integer.parseInt(produccionUtil.getUsuarioCreador()));
             produccion.setUsuarioCreador(usuario);
             produccion.setProduccionDescripcion(produccionUtil.getProduccionDescripcion());
-
             create(produccion);
             return true;
         } catch (Exception e) {
