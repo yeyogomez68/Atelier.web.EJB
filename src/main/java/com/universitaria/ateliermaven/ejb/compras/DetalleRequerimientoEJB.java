@@ -73,7 +73,7 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
                 rqDeta.setMaterialId(em.find(Material.class, Integer.parseInt(mat.getMaterialId())));
                 rqDeta.setRequestDetaFecha(new Timestamp(System.currentTimeMillis()));
                 rqDeta.setUsuarioId(user.getUsuarioId());
-                rqDeta.setRequestDetaCantidad(Float.parseFloat(mat.getCantidad()));
+                rqDeta.setRequestDetaCantidad(Double.parseDouble(mat.getCantidad()));
                 em.persist(rqDeta);                
             }   
             return  true;
@@ -92,7 +92,7 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
                 for (MaterialRequerimientoUtil mat : listMaterial) {                
                     if (rqDeta.getMaterialId().getMaterialId()==Integer.parseInt(mat.getMaterialId())) {
                         flag++;
-                        rqDeta.setRequestDetaCantidad(Float.parseFloat(mat.getCantidad()));
+                        rqDeta.setRequestDetaCantidad(Double.parseDouble(mat.getCantidad()));
                         listMaterial.remove(mat);
                         break;
                     }
