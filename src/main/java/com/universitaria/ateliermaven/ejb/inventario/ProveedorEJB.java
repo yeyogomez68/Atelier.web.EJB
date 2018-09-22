@@ -9,7 +9,6 @@ import com.universitaria.atelier.web.jpa.AbstractFacade;
 import com.universitaria.atelier.web.jpa.Ciudad;
 import com.universitaria.atelier.web.jpa.Estado;
 import com.universitaria.atelier.web.jpa.Proveedor;
-import static com.universitaria.atelier.web.jpa.Proveedor_.proveedorId;
 import com.universitaria.atelier.web.utils.ProveedorUtil;
 import java.util.ArrayList;
 import java.util.List;
