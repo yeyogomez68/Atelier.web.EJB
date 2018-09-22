@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.model.SelectItem;
+import javax.persistence.NoResultException;
 
 /**
  *
@@ -64,7 +65,10 @@ public class PrendaTipoEJB extends AbstractFacade<Prendatipo> {
     public boolean existePrendaTipo(String prendaTipoDescripcion) {
         try {
             return (em.createNamedQuery("Prendatipo.findByPrendaTipoDescripcion").setParameter("prendaTipoDescripcion", prendaTipoDescripcion).getSingleResult() != null);
-        } catch (Exception e) {
+        } catch (NoResultException nre) {
+            System.out.println("com.universitaria.ateliermaven.ejb.produccion.PrendaTipoEJB.existePrendaTipo()");
+            nre.getMessage();
+        }catch (Exception e) {
             e.printStackTrace();
         }
         return false;
