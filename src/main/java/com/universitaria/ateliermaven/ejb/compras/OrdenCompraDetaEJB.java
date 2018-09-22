@@ -55,7 +55,7 @@ public class OrdenCompraDetaEJB extends AbstractFacade<Ordencompradeta> {
     public List<Ordencompradeta> getOrdenCompraDetaPorEstado() {
 
         try {
-            return em.createNamedQuery("Ordencompradeta.findByEstadoId", Ordencompradeta.class).setParameter("estadoId", em.find(Estado.class, EstadoEnum.ACTIVO.getId())).getResultList();
+            return em.createNamedQuery("Ordencompradeta.findByEstadoId", Ordencompradeta.class).setParameter("estadoId", em.find(Estado.class, EstadoEnum.COMPRAS.getId())).getResultList();
         } catch (NoResultException nre) {
             System.out.println("com.universitaria.ateliermaven.ejb.compras.OrdenCompraDetaEJB.getOrdenCompraDetaPorEstado()");
             nre.getMessage();
