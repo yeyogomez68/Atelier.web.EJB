@@ -63,12 +63,22 @@ public class RollEJB  extends AbstractFacade<Roll>{
         }
     }
     
+      public boolean getExisteRoll(String rollDescripcion) {
+        try {
+            return (em.createNamedQuery("Roll.findByRollDesc").setParameter("rollDesc", rollDescripcion).getSingleResult() != null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
     public boolean setModificarRoll(String rollId, String rollDescrip, String estadoId){
         try {
             Roll roll = new Roll();
             roll = em.find(Roll.class, Integer.parseInt(rollId));
             roll.setRollDesc(rollDescrip);
             roll.setEstadoId(em.find(Estado.class, Integer.parseInt(estadoId)));
+            edit(roll);
             return true;
         } catch (Exception e) {
             return false;

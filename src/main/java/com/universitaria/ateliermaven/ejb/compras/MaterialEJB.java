@@ -53,31 +53,41 @@ public class MaterialEJB extends AbstractFacade<Material>{
         return lista;
     }
     
-    public boolean setCrearMaterial(MaterialUtil material){
+    public boolean getExisteMaterial(String materialNombre) {
+        try {
+            return(em.createNamedQuery("Material.findByMaterialReference").setParameter("materialNombre", materialNombre).getSingleResult() != null);
+            } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    
+    public boolean setCrearMaterial(MaterialUtil materialCrear){
         try {
             Material mate = new Material();  
-            mate.setMaterialNombre(material.getNombre());
-            mate.setMaterialReference(material.getReferencia());
-            mate.setMaterialTipoId(em.find(Materialtipo.class, Integer.valueOf(material.getTipoId())));
-            mate.setMarcaId(em.find(Marca.class, Integer.valueOf(material.getMarcaId())));
+            mate.setMaterialNombre(materialCrear.getNombre());
+            mate.setMaterialReference(materialCrear.getReferencia());
+            mate.setMaterialTipoId(em.find(Materialtipo.class, Integer.valueOf(materialCrear.getTipoId())));
+            mate.setMarcaId(em.find(Marca.class, Integer.valueOf(materialCrear.getMarcaId())));
             create(mate);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
     
-    public boolean setModificarMaterial(MaterialUtil material){
+    public boolean setModificarMaterial(MaterialUtil materialModificar){
         try {
             Material mate = new Material();
-            mate = em.find(Material.class, Integer.parseInt(material.getMaterialId()));
-            mate.setMaterialNombre(material.getNombre());
-            mate.setMaterialReference(material.getReferencia());
-            mate.setMaterialTipoId(em.find(Materialtipo.class, Integer.valueOf(material.getTipoId())));
-            mate.setMarcaId(em.find(Marca.class, Integer.valueOf(material.getMarcaId())));
+            mate = em.find(Material.class, materialModificar.getMaterialId());
+            mate.setMaterialNombre(materialModificar.getNombre());
+            mate.setMaterialReference(materialModificar.getReferencia());
             edit(mate);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

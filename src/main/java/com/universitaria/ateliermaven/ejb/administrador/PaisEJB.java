@@ -46,7 +46,7 @@ public class PaisEJB extends AbstractFacade<Pais> {
         return false;
     }
      
-       public boolean existePais(String paisDescripcion) {
+       public boolean getexistePais(String paisDescripcion) {
         try {
             return (em.createNamedQuery("Pais.findByPaisNombre").setParameter("paisNombre", paisDescripcion).getSingleResult() != null);
         } catch (Exception e) {

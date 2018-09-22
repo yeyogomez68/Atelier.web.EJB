@@ -33,7 +33,7 @@ public class MarcaEJB extends AbstractFacade<Marca>{
         return null;
     }
     
-    public List<SelectItem> getSelectItemMarca(){
+    public List<SelectItem> getSelectItemMarcas(){
         List<SelectItem> lista = new ArrayList<>();
         try {
             for(Marca marca :(ArrayList<Marca>) em.createNamedQuery("Marca.findAll",Marca.class).getResultList()){

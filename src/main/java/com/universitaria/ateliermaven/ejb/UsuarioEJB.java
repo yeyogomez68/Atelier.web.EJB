@@ -13,7 +13,6 @@ import com.universitaria.atelier.web.jpa.Usuario;
 import com.universitaria.atelier.web.utils.UsuarioUtil;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.ejb.Stateless;
 import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
@@ -59,18 +58,18 @@ public class UsuarioEJB extends AbstractFacade<Usuario> {
 
     public boolean setCrearUsuario(UsuarioUtil usuarioCrear) {
         try {
-            Usuario usuario = new Usuario();
-            usuario.setUsuarioIdentificacion(Integer.parseInt(usuarioCrear.getIdentificacion()));
-            usuario.setUsuarioNombre(usuarioCrear.getNombre());
-            usuario.setUsuarioApellido(usuarioCrear.getApellido());
-            usuario.setUsuarioEmail(usuarioCrear.getEmail());
-            usuario.setUsuarioPassword(usuarioCrear.getPassword());
-            usuario.setUsuarioDireccion(usuarioCrear.getDireccion());
-            usuario.setUsuarioCel(usuarioCrear.getCelular());
-            usuario.setEstadoId(em.find(Estado.class, Integer.parseInt(usuarioCrear.getEstadoId())));
-            usuario.setRollId(em.find(Roll.class, Integer.parseInt(usuarioCrear.getRollId())));
-            usuario.setCiudadId(em.find(Ciudad.class, Integer.parseInt(usuarioCrear.getCiudadId())));
-            create(usuario);
+            Usuario usuari = new Usuario();
+            usuari.setUsuarioIdentificacion(Integer.parseInt(usuarioCrear.getIdentificacion()));
+            usuari.setUsuarioNombre(usuarioCrear.getNombre());
+            usuari.setUsuarioApellido(usuarioCrear.getApellido());
+            usuari.setUsuarioEmail(usuarioCrear.getEmail());
+            usuari.setUsuarioPassword(usuarioCrear.getPassword());
+            usuari.setUsuarioDireccion(usuarioCrear.getDireccion());
+            usuari.setUsuarioCel(usuarioCrear.getCelular());
+            usuari.setEstadoId(em.find(Estado.class, Integer.parseInt(usuarioCrear.getEstadoId())));
+            usuari.setRollId(em.find(Roll.class, Integer.parseInt(usuarioCrear.getRollId())));
+            usuari.setCiudadId(em.find(Ciudad.class, Integer.parseInt(usuarioCrear.getCiudadId())));
+            create(usuari);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,4 +92,33 @@ public class UsuarioEJB extends AbstractFacade<Usuario> {
         return lista;
     }
 
+   public boolean getExisteUsuario(String usuarioNombre) {
+        try {
+            return (em.createNamedQuery("Usuario.findByUsuarioIdentificacion").setParameter("usuarioIdentificacion", usuarioNombre).getSingleResult() != null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+     
+    public boolean setModificarUsuario(UsuarioUtil usuarioModificar) {
+        try {
+            Usuario usuari = new Usuario();
+            usuari = em.find(Usuario.class,usuarioModificar.getUsuarioId());
+//            usuari.setUsuarioIdentificacion(Integer.parseInt(usuarioModificar.getIdentificacion())); //No estas modificando
+            usuari.setUsuarioNombre(usuarioModificar.getNombre());
+            usuari.setUsuarioApellido(usuarioModificar.getApellido());
+            usuari.setUsuarioEmail(usuarioModificar.getEmail());
+            usuari.setUsuarioCel(usuarioModificar.getCelular()); 
+            edit(usuari);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }  
+    
+    
+    
 }

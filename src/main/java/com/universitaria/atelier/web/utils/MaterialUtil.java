@@ -11,17 +11,26 @@ package com.universitaria.atelier.web.utils;
  */
 public class MaterialUtil {
     
-    private String materialId;
+    private int materialId;
     private String nombre;
     private String referencia;
     private String marcaId;
     private String tipoId;
+    private String materialTipoId;
 
-    public String getMaterialId() {
+    public int getMaterialId() {
         return materialId;
     }
 
-    public void setMaterialId(String materialId) {
+    public String getMaterialTipoId() {
+        return materialTipoId;
+    }
+
+    public void setMaterialTipoId(String materialTipoId) {
+        this.materialTipoId = materialTipoId;
+    }
+
+    public void setMaterialId(int materialId) {
         this.materialId = materialId;
     }
     

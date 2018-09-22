@@ -74,7 +74,7 @@ public class PrendasEJB extends AbstractFacade<Prenda> {
         return false;
     }
 
-    public boolean existePrenda(String prendaNombre) {
+    public boolean getexistePrenda(String prendaNombre) {
         try {
             return (em.createNamedQuery("Prenda.findByPrendaNombre").setParameter("prendaNombre", prendaNombre).getSingleResult() != null);
         } catch (Exception e) {

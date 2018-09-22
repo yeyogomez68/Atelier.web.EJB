@@ -49,7 +49,7 @@ public class DepartamentoEJB extends AbstractFacade<Departamento> {
         return false;
     }
 
-    public boolean existeDepartamento(String departamentoDescripcion) {
+    public boolean getexisteDepartamento(String departamentoDescripcion) {
         try {
             return (em.createNamedQuery("Departamento.findByDepartamentoNombre").setParameter("departamentoNombre", departamentoDescripcion).getSingleResult() != null);
         } catch (Exception e) {

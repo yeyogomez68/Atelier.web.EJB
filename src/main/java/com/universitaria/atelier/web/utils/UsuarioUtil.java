@@ -11,6 +11,7 @@ package com.universitaria.atelier.web.utils;
  */
 public class UsuarioUtil {
     
+    private int usuarioId;
     private String identificacion;
     private String nombre;
     private String apellido;
@@ -23,6 +24,14 @@ public class UsuarioUtil {
     private String rollId;
 
     public UsuarioUtil() {
+    }
+
+    public int getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(int usuarioId) {
+        this.usuarioId = usuarioId;
     }
     
     public String getIdentificacion() {
@@ -104,6 +113,6 @@ public class UsuarioUtil {
     public void setRollId(String rollId) {
         this.rollId = rollId;
     }
- 
-    
+
+       
 }

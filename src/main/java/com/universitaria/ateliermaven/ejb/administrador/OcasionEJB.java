@@ -49,7 +49,7 @@ public class OcasionEJB extends AbstractFacade<Ocasion>{
     }
     
     
-     public boolean existeOcasion(String ocasionDescripcion) {
+     public boolean getexisteOcasion(String ocasionDescripcion) {
         try {
             return (em.createNamedQuery("Ocasion.findByOcasionDescrip").setParameter("ocasionDescrip", ocasionDescripcion).getSingleResult() != null);
         } catch (Exception e) {
