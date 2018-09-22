@@ -77,12 +77,11 @@ public class PrendaTipoEJB extends AbstractFacade<Prendatipo> {
     
     public boolean setModificarPrendaTipo(String prendaTipoId, String nuevaDescripcion) {
         try {
-            Prendatipo prendaTipo = em.find(Prendatipo.class, Integer.parseInt(prendaTipoId));
-            if (!nuevaDescripcion.equalsIgnoreCase(prendaTipo.getPrendaTipoDescripcion())) {
-                prendaTipo.setPrendaTipoDescripcion(nuevaDescripcion);
-                edit(prendaTipo);
+            Prendatipo prendatip = new Prendatipo();
+            prendatip = em.find(Prendatipo.class, Integer.parseInt(prendaTipoId));
+            prendatip.setPrendaTipoDescripcion(nuevaDescripcion);
+            edit(prendatip);
                 return true;
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }

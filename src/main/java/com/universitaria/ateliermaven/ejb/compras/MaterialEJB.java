@@ -83,6 +83,7 @@ public class MaterialEJB extends AbstractFacade<Material> {
             stockMaterialesEJB.setCrearStockMaterial(sm);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -160,7 +161,7 @@ public class MaterialEJB extends AbstractFacade<Material> {
         try {
             for (Material mat : (ArrayList<Material>) em.createNamedQuery("Material.findAll", Material.class).getResultList()) {
                 MaterialUtil util = new MaterialUtil();
-                util.setMaterialId(mat.getMaterialId().toString());
+                util.setMaterialId(String.valueOf(mat.getMaterialId()));
                 util.setNombre(mat.getMaterialNombre());
                 util.setMarcaId(mat.getMarcaId().getMarcaNombre());
                 util.setReferencia(mat.getMaterialReference());
@@ -188,5 +189,13 @@ public class MaterialEJB extends AbstractFacade<Material> {
         }
         return false;
     }
-
+    
+        public boolean getExisteMaterial(String materialNombre) {
+        try {
+            return(em.createNamedQuery("Material.findByMaterialReference").setParameter("materialNombre", materialNombre).getSingleResult() != null);
+            } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

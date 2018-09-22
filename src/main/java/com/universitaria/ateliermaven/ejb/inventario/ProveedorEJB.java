@@ -9,6 +9,7 @@ import com.universitaria.atelier.web.jpa.AbstractFacade;
 import com.universitaria.atelier.web.jpa.Ciudad;
 import com.universitaria.atelier.web.jpa.Estado;
 import com.universitaria.atelier.web.jpa.Proveedor;
+import static com.universitaria.atelier.web.jpa.Proveedor_.proveedorId;
 import com.universitaria.atelier.web.utils.ProveedorUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,4 +71,28 @@ public class ProveedorEJB extends AbstractFacade<Proveedor> {
         }
     }
 
+   public boolean getExisteProveedor(String proveedorNit) {
+        try {
+            return (em.createNamedQuery("Proveedor.findByNit").setParameter("nit", proveedorNit).getSingleResult() != null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }  
+  
+    public boolean setModificarProveedor(ProveedorUtil proveedorModificar) {
+        try {
+            Proveedor proveedor = new Proveedor();
+            proveedor = em.find(Proveedor.class,proveedorModificar.getProveedorId());
+            proveedor.setNit(proveedorModificar.getNit());
+            proveedor.setProveedorNombre(proveedorModificar.getNombre());
+            proveedor.setProveedorDireccion(proveedorModificar.getDireccion());
+            proveedor.setProveedorPhone(proveedorModificar.getTelefono());
+            edit(proveedor);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    } 
 }

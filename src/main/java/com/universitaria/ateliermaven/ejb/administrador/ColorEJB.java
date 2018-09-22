@@ -47,7 +47,7 @@ public class ColorEJB extends AbstractFacade<Color> {
         return false;
     }
 
-    public boolean existeColor(String colorDescripcion) {
+    public boolean getexisteColor(String colorDescripcion) {
         try {
             return (em.createNamedQuery("Color.findByColorDescrip").setParameter("colorDescrip", colorDescripcion).getSingleResult() != null);
         } catch (Exception e) {

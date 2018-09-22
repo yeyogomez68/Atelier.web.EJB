@@ -85,7 +85,7 @@ public class ProduccionEJB extends AbstractFacade<Produccion> {
         return false;
     }
 
-    public boolean existeProduccion(String produccionDescripcion) {
+    public boolean getexisteProduccion(String produccionDescripcion) {
         try {
             return (em.createNamedQuery("Produccion.findByProduccionDescripcion").setParameter("produccionDescripcion", produccionDescripcion).getSingleResult() != null);
         } catch (NoResultException nre) {

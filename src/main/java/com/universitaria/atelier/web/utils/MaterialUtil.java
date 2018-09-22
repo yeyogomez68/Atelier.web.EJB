@@ -20,16 +20,16 @@ public class MaterialUtil {
     private String usuarioId;
     private String ubicacion;
 
+    public String getNombre() {
+        return nombre;
+    }
+
     public String getMaterialId() {
         return materialId;
     }
 
     public void setMaterialId(String materialId) {
         this.materialId = materialId;
-    }
-
-    public String getNombre() {
-        return nombre;
     }
 
     public void setNombre(String nombre) {

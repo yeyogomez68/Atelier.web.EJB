@@ -10,7 +10,8 @@ package com.universitaria.atelier.web.utils;
  * @author SoulHunter
  */
 public class ProveedorUtil {
-
+    
+    private int proveedorId;
     private String nit;
     private String nombre;
     private String direccion;
@@ -22,6 +23,15 @@ public class ProveedorUtil {
         return nit;
     }
 
+    public int getProveedorId() {
+        return proveedorId;
+    }
+
+    public void setProveedorId(int proveedorId) {
+        this.proveedorId = proveedorId;
+    }
+
+    
     public void setNit(String nit) {
         this.nit = nit;
     }

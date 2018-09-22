@@ -112,5 +112,31 @@ public class UsuarioEJB extends AbstractFacade<Usuario> {
         }
         return lista;
     }
+       public boolean getExisteUsuario(String usuarioNombre) {
+        try {
+            return (em.createNamedQuery("Usuario.findByUsuarioIdentificacion").setParameter("usuarioIdentificacion", usuarioNombre).getSingleResult() != null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+     
+    public boolean setModificarUsuario(UsuarioUtil usuarioModificar) {
+        try {
+            Usuario usuari = new Usuario();
+            usuari = em.find(Usuario.class,usuarioModificar.getUsuarioId());
+//            usuari.setUsuarioIdentificacion(Integer.parseInt(usuarioModificar.getIdentificacion())); //No estas modificando
+            usuari.setUsuarioNombre(usuarioModificar.getNombre());
+            usuari.setUsuarioApellido(usuarioModificar.getApellido());
+            usuari.setUsuarioEmail(usuarioModificar.getEmail());
+            usuari.setUsuarioCel(usuarioModificar.getCelular()); 
+            edit(usuari);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }  
 
 }

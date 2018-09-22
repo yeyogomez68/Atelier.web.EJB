@@ -53,24 +53,36 @@ public class EstadoEJB extends AbstractFacade<Estado>{
     
     public boolean crearEstado (String nombreEstado) {
         try {
-            if (!nombreEstado.equals("")){
             Estado estado = new Estado();
             estado.setEstadoDescrip(nombreEstado);           
             create(estado);
-            return true;
-            }
+            return true;            
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
     }
     
-    public boolean setModificarEstado (String nombreEstado) {
+    public boolean getExisteEstado(String estadoDescripcion) {
         try {
-            
+            return (em.createNamedQuery("Estado.findByCargoDesc").setParameter("cargoDesc", estadoDescripcion).getSingleResult() != null);
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
-}
+    }
+    
+   public boolean setModificarEstado(String id, String desc) {
+        try {
+            Estado estad = new Estado();
+            estad = em.find(Estado.class, Integer.parseInt(id));
+            estad.setEstadoDescrip(desc);
+            edit(estad);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     
 }
