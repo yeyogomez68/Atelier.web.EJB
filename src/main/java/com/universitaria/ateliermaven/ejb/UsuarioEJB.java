@@ -11,8 +11,10 @@ import com.universitaria.atelier.web.jpa.Estado;
 import com.universitaria.atelier.web.jpa.Roll;
 import com.universitaria.atelier.web.jpa.Usuario;
 import com.universitaria.atelier.web.utils.UsuarioUtil;
+import com.universitaria.ateliermaven.ejb.security.EncryptDataEJB;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.EJB;
 
 import javax.ejb.Stateless;
 import javax.faces.model.SelectItem;
@@ -26,16 +28,19 @@ import javax.persistence.Query;
 @Stateless
 public class UsuarioEJB extends AbstractFacade<Usuario> {
 
+    @EJB
+    private EncryptDataEJB encryptDataEJB;
+    
     public UsuarioEJB() {
         super(Usuario.class);
     }
 
     public Usuario getAccess(String user, String password) {
-        try {
+        try {            
 //            Query q1= em.createNativeQuery("Select * from Usuario Where UsuarioEmail = ?1 And UsuarioPassword = ?2 ",Usuario.class)
 //                    .setParameter(1, user)
 //                    .setParameter(2, password);
-            Query q1 = em.createNamedQuery("Usuario.findByLogin", Usuario.class).setParameter("usuarioEmail", user).setParameter("usuarioPassword", password);
+            Query q1 = em.createNamedQuery("Usuario.findByLogin", Usuario.class).setParameter("usuarioEmail", user).setParameter("usuarioPassword", encryptDataEJB.encryptText(password));
             return (Usuario) q1.getSingleResult();
         } catch (NoResultException e) {
             System.out.println("UsuarioFacade.getAccess() NoResultException");
@@ -64,7 +69,7 @@ public class UsuarioEJB extends AbstractFacade<Usuario> {
             usuario.setUsuarioNombre(usuarioCrear.getNombre());
             usuario.setUsuarioApellido(usuarioCrear.getApellido());
             usuario.setUsuarioEmail(usuarioCrear.getEmail());
-            usuario.setUsuarioPassword(usuarioCrear.getPassword());
+            usuario.setUsuarioPassword(encryptDataEJB.encryptText(usuarioCrear.getPassword()));
             usuario.setUsuarioDireccion(usuarioCrear.getDireccion());
             usuario.setUsuarioCel(usuarioCrear.getCelular());
             usuario.setEstadoId(em.find(Estado.class, Integer.parseInt(usuarioCrear.getEstadoId())));
