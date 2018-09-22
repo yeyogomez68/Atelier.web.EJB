@@ -186,5 +186,17 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
             e.printStackTrace();
         }
     }
+    
+    public boolean actualizarEstadoaCompras(Integer encabezado, Integer material){
+        try {
+            Requestdeta rq = em.createNamedQuery("Requestdeta.findForBuy",Requestdeta.class).setParameter("encabezadoRequerimientoId", encabezado).setParameter("materialId", material).getSingleResult();
+            rq.setEstadoId(em.find(Estado.class, EstadoEnum.COMPRAS.getId()));
+            edit(rq);
+            return true;
+        } catch (Exception e) {
+            System.out.println("com.universitaria.ateliermaven.ejb.compras.DetalleRequerimientoEJB.actualizarEstadoaCompras()" + e);
+        }
+        return false;
+    }
 
 }
