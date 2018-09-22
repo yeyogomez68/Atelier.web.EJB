@@ -38,6 +38,7 @@ public class StockMaterialesEJB extends AbstractFacade<Stockmateriales> {
     public boolean setCrearStockMaterial(Stockmateriales stockmaterial) {
         try {
             if (!existeStockMaterial(stockmaterial.getMaterialId())) {
+                
                 create(stockmaterial);
                 return true;
             }
@@ -49,7 +50,7 @@ public class StockMaterialesEJB extends AbstractFacade<Stockmateriales> {
 
     public boolean existeStockMaterial(Material material) {
         try {
-            return (em.createNamedQuery("Stockmateriales.findByStockMaterialId").setParameter("stockMaterialId", material).getSingleResult() != null);
+            return (em.createNamedQuery("Stockmateriales.findByMaterialId").setParameter("materialId", material).getSingleResult() != null);
         } catch (NoResultException nre) {
             System.out.println("com.universitaria.ateliermaven.ejb.inventario.StockMaterialesEJB.existeStockMaterial()");
             System.err.println(nre.getMessage());
