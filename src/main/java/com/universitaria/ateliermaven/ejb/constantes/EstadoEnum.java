@@ -10,7 +10,7 @@ package com.universitaria.ateliermaven.ejb.constantes;
  * @author jeisson.gomez
  */
 public enum EstadoEnum {
-    
+
     ACTIVO(1),
     INACTIVO(2),
     PENDIENTE(3),
@@ -24,11 +24,11 @@ public enum EstadoEnum {
     VENDIDO(11),
     RETORNADO(12),
     COMPRAS(13);
-    
+
     private int id;
 
-    private EstadoEnum(int id){
-        this.id = id;        
+    private EstadoEnum(int id) {
+        this.id = id;
     }
 
     public int getId() {
@@ -38,6 +38,5 @@ public enum EstadoEnum {
     public void setId(int id) {
         this.id = id;
     }
-    
 
 }

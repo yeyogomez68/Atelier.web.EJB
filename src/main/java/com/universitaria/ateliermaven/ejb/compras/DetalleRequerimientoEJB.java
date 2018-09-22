@@ -30,19 +30,20 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
 
     @EJB
     private EncabezadoRequerimientoEJB encabezadoRequerimientoEJB;
+
     public DetalleRequerimientoEJB() {
         super(Requestdeta.class);
     }
-    
-    public List<MaterialRequerimientoUtil> obtenerDetalleRq(String Id){
+
+    public List<MaterialRequerimientoUtil> obtenerDetalleRq(String Id) {
         List<MaterialRequerimientoUtil> lista = new ArrayList<>();
         try {
             for (Requestdeta rqDeta : em.createNamedQuery("Requestdeta.findByIdRq", Requestdeta.class).setParameter("idRq", Integer.valueOf(Id)).getResultList()) {
-                MaterialRequerimientoUtil mat =  new MaterialRequerimientoUtil();
+                MaterialRequerimientoUtil mat = new MaterialRequerimientoUtil();
                 mat.setMaterialId(rqDeta.getMaterialId().getMaterialId().toString());
                 mat.setReferencia(rqDeta.getMaterialId().getMaterialReference());
                 mat.setMarcaId(rqDeta.getMaterialId().getMarcaId().getMarcaNombre());
-                mat.setCantidad(String.valueOf(rqDeta.getRequestDetaCantidad()));                
+                mat.setCantidad(String.valueOf(rqDeta.getRequestDetaCantidad()));
                 mat.setTipoId(rqDeta.getMaterialId().getMaterialTipoId().getMaterialTipoDescript());
                 mat.setNombre(rqDeta.getMaterialId().getMaterialNombre());
                 lista.add(mat);
@@ -50,17 +51,17 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
             return lista;
         } catch (Exception e) {
             e.printStackTrace();
-        }        
+        }
         return null;
     }
-    
-    public List<Requestdeta> obtenerDetalleByIdRq(int Id){
+
+    public List<Requestdeta> obtenerDetalleByIdRq(int Id) {
         List<Requestdeta> lista = new ArrayList<>();
-        try {            
+        try {
             return em.createNamedQuery("Requestdeta.findByIdRq", Requestdeta.class).setParameter("idRq", Id).getResultList();
         } catch (Exception e) {
             e.printStackTrace();
-        }        
+        }
         return lista;
     }
     
@@ -84,60 +85,60 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
                 rqDeta.setRequestDetaFecha(new Timestamp(System.currentTimeMillis()));
                 rqDeta.setUsuarioId(user.getUsuarioId());
                 rqDeta.setRequestDetaCantidad(Double.parseDouble(mat.getCantidad()));
-                em.persist(rqDeta);                
-            }   
-            return  true;
+                em.persist(rqDeta);
+            }
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
     }
-    
-    public boolean modificarDetalleRequerimiento(String IdRq,List<MaterialRequerimientoUtil> listMaterial, Usuario user){
+
+    public boolean modificarDetalleRequerimiento(String IdRq, List<MaterialRequerimientoUtil> listMaterial, Usuario user) {
         int flag = 0;
         try {
             //Elimina los items que no esten.
             for (Requestdeta rqDeta : em.createNamedQuery("Requestdeta.findByIdRq", Requestdeta.class).setParameter("idRq", Integer.valueOf(IdRq)).getResultList()) {
-                flag=0;
-                for (MaterialRequerimientoUtil mat : listMaterial) {                
-                    if (rqDeta.getMaterialId().getMaterialId()==Integer.parseInt(mat.getMaterialId())) {
+                flag = 0;
+                for (MaterialRequerimientoUtil mat : listMaterial) {
+                    if (rqDeta.getMaterialId().getMaterialId() == Integer.parseInt(mat.getMaterialId())) {
                         flag++;
                         rqDeta.setRequestDetaCantidad(Double.parseDouble(mat.getCantidad()));
                         listMaterial.remove(mat);
                         break;
                     }
-                } 
-                if(flag==0){
+                }
+                if (flag == 0) {
                     deleteItemdeta(rqDeta);
-                }else if(flag>0){
+                } else if (flag > 0) {
                     updateItem(rqDeta);
                 }
             }
-            crearDetalleRequerimiento(Integer.parseInt(IdRq), listMaterial, user); 
-            return  true;
+            crearDetalleRequerimiento(Integer.parseInt(IdRq), listMaterial, user);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
     }
-    
-    private void deleteItemdeta(Requestdeta rqDeta){
+
+    private void deleteItemdeta(Requestdeta rqDeta) {
         try {
             remove(rqDeta);
         } catch (Exception e) {
         }
     }
-    
-    private void updateItem(Requestdeta rqDeta){
+
+    private void updateItem(Requestdeta rqDeta) {
         try {
             edit(rqDeta);
         } catch (Exception e) {
         }
     }
-    
-    public boolean aprobarItem(Requestdeta rqDeta){
+
+    public boolean aprobarItem(Requestdeta rqDeta) {
         try {
-            rqDeta.setEstadoId(em.find(Estado.class, EstadoEnum.APROBADO.getId()));            
+            rqDeta.setEstadoId(em.find(Estado.class, EstadoEnum.APROBADO.getId()));
             updateItem(rqDeta);
             validateStateRQ(rqDeta.getEncabezadoRequerimientoId());
             return true;
@@ -145,8 +146,8 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
             return false;
         }
     }
-    
-    public boolean rechazarItem(Requestdeta rqDeta){
+
+    public boolean rechazarItem(Requestdeta rqDeta) {
         try {
             rqDeta.setEstadoId(em.find(Estado.class, EstadoEnum.RECHAZADO.getId()));
             updateItem(rqDeta);
@@ -154,36 +155,36 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
             return true;
         } catch (Exception e) {
             return false;
-        }        
+        }
     }
-    
-    public void validateStateRQ(Encabezadorequerimiento rqId){
-        int ap=0, re=0, pe=0;
+
+    public void validateStateRQ(Encabezadorequerimiento rqId) {
+        int ap = 0, re = 0, pe = 0;
         List<Requestdeta> lista = new ArrayList<>();
         lista = obtenerDetalleByIdRq(rqId.getEncabezadoRequerimientoId());
         try {
             for (Requestdeta rqDeta : lista) {
-                if(rqDeta.getEstadoId().getEstadoId()==EstadoEnum.APROBADO.getId()){
+                if (rqDeta.getEstadoId().getEstadoId() == EstadoEnum.APROBADO.getId()) {
                     ap++;
-                }else if(rqDeta.getEstadoId().getEstadoId()==EstadoEnum.RECHAZADO.getId()){
+                } else if (rqDeta.getEstadoId().getEstadoId() == EstadoEnum.RECHAZADO.getId()) {
                     re++;
-                }else if(rqDeta.getEstadoId().getEstadoId()==EstadoEnum.PENDIENTE.getId()){
+                } else if (rqDeta.getEstadoId().getEstadoId() == EstadoEnum.PENDIENTE.getId()) {
                     pe++;
                 }
-            }           
-            if(re==lista.size()){
-                rqId.setEstadoId(em.find(Estado.class,EstadoEnum.RECHAZADO.getId()));                
-            }else if(ap==lista.size()){
-                rqId.setEstadoId(em.find(Estado.class,EstadoEnum.APROBADO.getId()));                
-            }else if(pe==0){
-                rqId.setEstadoId(em.find(Estado.class,EstadoEnum.CONDICIONADO.getId()));                
-            }else{
-                rqId.setEstadoId(em.find(Estado.class,EstadoEnum.EN_APROBACION.getId()));                
-            }            
+            }
+            if (re == lista.size()) {
+                rqId.setEstadoId(em.find(Estado.class, EstadoEnum.RECHAZADO.getId()));
+            } else if (ap == lista.size()) {
+                rqId.setEstadoId(em.find(Estado.class, EstadoEnum.APROBADO.getId()));
+            } else if (pe == 0) {
+                rqId.setEstadoId(em.find(Estado.class, EstadoEnum.CONDICIONADO.getId()));
+            } else {
+                rqId.setEstadoId(em.find(Estado.class, EstadoEnum.EN_APROBACION.getId()));
+            }
             encabezadoRequerimientoEJB.edit(rqId);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
 }
