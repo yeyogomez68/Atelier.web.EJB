@@ -5,6 +5,7 @@
  */
 package com.universitaria.atelier.web.utils;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -12,17 +13,16 @@ import java.util.Date;
  * @author SoulHunter
  */
 public class ProduccionUtil {
-private String produccionId;
-private Date   produccionFecha;
-private Date   produccionInicioHora;
-private String produccionDiaEstimated;
-private String prendaId;
-private String estadoId;
-private String usuarioCreador;
-private String usuarioId;
-private String produccionDescripcion;
 
-
+    private String produccionId;
+    private Calendar produccionFecha;
+    private Date produccionFechaDate;
+    private String produccionDiaEstimated;
+    private String estadoId;
+    private String usuarioCreador;
+    private String produccionDescripcion;
+    private String prendaId;
+    private String avance;
 
     public String getProduccionId() {
         return produccionId;
@@ -32,20 +32,12 @@ private String produccionDescripcion;
         this.produccionId = produccionId;
     }
 
-    public Date getProduccionFecha() {
+    public Calendar getProduccionFecha() {
         return produccionFecha;
     }
 
-    public void setProduccionFecha(Date produccionFecha) {
+    public void setProduccionFecha(Calendar produccionFecha) {
         this.produccionFecha = produccionFecha;
-    }
-
-    public Date getProduccionInicioHora() {
-        return produccionInicioHora;
-    }
-
-    public void setProduccionInicioHora(Date produccionInicioHora) {
-        this.produccionInicioHora = produccionInicioHora;
     }
 
     public String getProduccionDiaEstimated() {
@@ -54,14 +46,6 @@ private String produccionDescripcion;
 
     public void setProduccionDiaEstimated(String produccionDiaEstimated) {
         this.produccionDiaEstimated = produccionDiaEstimated;
-    }
-
-    public String getPrendaId() {
-        return prendaId;
-    }
-
-    public void setPrendaId(String prendaId) {
-        this.prendaId = prendaId;
     }
 
     public String getEstadoId() {
@@ -80,14 +64,6 @@ private String produccionDescripcion;
         this.usuarioCreador = usuarioCreador;
     }
 
-    public String getUsuarioId() {
-        return usuarioId;
-    }
-
-    public void setUsuarioId(String usuarioId) {
-        this.usuarioId = usuarioId;
-    }
-
     public String getProduccionDescripcion() {
         return produccionDescripcion;
     }
@@ -96,6 +72,28 @@ private String produccionDescripcion;
         this.produccionDescripcion = produccionDescripcion;
     }
 
-    
+    public Date getProduccionFechaDate() {
+        return produccionFechaDate;
+    }
+
+    public void setProduccionFechaDate(Date produccionFechaDate) {
+        this.produccionFechaDate = produccionFechaDate;
+    }
+
+    public String getAvance() {
+        return avance;
+    }
+
+    public void setAvance(String avance) {
+        this.avance = avance;
+    }
+
+    public String getPrendaId() {
+        return prendaId;
+    }
+
+    public void setPrendaId(String prendaId) {
+        this.prendaId = prendaId;
+    }
 
 }

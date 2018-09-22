@@ -14,11 +14,16 @@ public class PrendaUtil {
     private String prendaId;
     private String prendaNombre;
     private String prendaTipoId;
-    private String materialId;
     private String colorId;
     private String prendaDescripcion;
     private String ocasionId;
     private String estadoId;
+    private String tallaId;
+    private String cantidad;
+    private String usuarioId;
+    private String URL;
+    private String ubicacion;
+    private String valor;
 
     public String getPrendaId() {
         return prendaId;
@@ -42,14 +47,6 @@ public class PrendaUtil {
 
     public void setPrendaTipoId(String prendaTipoId) {
         this.prendaTipoId = prendaTipoId;
-    }
-
-    public String getMaterialId() {
-        return materialId;
-    }
-
-    public void setMaterialId(String materialId) {
-        this.materialId = materialId;
     }
 
     public String getColorId() {
@@ -82,6 +79,54 @@ public class PrendaUtil {
 
     public void setEstadoId(String estadoId) {
         this.estadoId = estadoId;
+    }
+
+    public String getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(String cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public String getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(String usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
+    public String getTallaId() {
+        return tallaId;
+    }
+
+    public void setTallaId(String tallaId) {
+        this.tallaId = tallaId;
+    }
+
+    public String getURL() {
+        return URL;
+    }
+
+    public void setURL(String URL) {
+        this.URL = URL;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
+    public String getValor() {
+        return valor;
+    }
+
+    public void setValor(String valor) {
+        this.valor = valor;
     }
 
 }

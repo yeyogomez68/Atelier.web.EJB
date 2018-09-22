@@ -38,6 +38,21 @@ public class ProveedorEJB extends AbstractFacade<Proveedor> {
         }
         return null;
     }
+    
+        public List<SelectItem> getSelectItemProveedor() {
+        List<SelectItem> lista = new ArrayList<>();
+        try {
+            for (Proveedor prov : getProveedores()) {
+                lista.add(new SelectItem(prov.getProveedorId(), prov.getNit() + " " + prov.getProveedorNombre()));
+            }
+            return lista;
+        } catch (NullPointerException e) {
+            return lista;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
 
     public boolean setCrearProveedor(ProveedorUtil nuevoProveedor) {
         try {
@@ -56,21 +71,6 @@ public class ProveedorEJB extends AbstractFacade<Proveedor> {
         }
     }
 
-  public List<SelectItem> getSelectItemProveedor() {
-        List<SelectItem> lista = new ArrayList<>();
-        try {
-            for (Proveedor proveedor : (ArrayList<Proveedor>) em.createNamedQuery("Proveedor.findAll", Proveedor.class).getResultList()) {
-                lista.add(new SelectItem(proveedor.getProveedorId(),proveedor.getProveedorNombre()));
-            }
-            return lista;
-        } catch (NullPointerException e) {
-            return lista;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return lista;
-    } 
-    
    public boolean getExisteProveedor(String proveedorNit) {
         try {
             return (em.createNamedQuery("Proveedor.findByNit").setParameter("nit", proveedorNit).getSingleResult() != null);

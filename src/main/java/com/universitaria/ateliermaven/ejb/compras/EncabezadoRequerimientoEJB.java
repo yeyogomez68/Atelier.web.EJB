@@ -9,6 +9,7 @@ import com.universitaria.atelier.web.jpa.AbstractFacade;
 import com.universitaria.atelier.web.jpa.Encabezadorequerimiento;
 import com.universitaria.atelier.web.jpa.Estado;
 import com.universitaria.atelier.web.jpa.Usuario;
+import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -41,13 +42,24 @@ public class EncabezadoRequerimientoEJB extends AbstractFacade<Encabezadorequeri
         return null;
     }
     
+    public List<Encabezadorequerimiento> getRequerimientosByUser(Usuario us){
+        try {
+            return (ArrayList<Encabezadorequerimiento>) em.createNamedQuery("Encabezadorequerimiento.findByUsuarioCreador",Encabezadorequerimiento.class).setParameter("usuarioCreador", us.getUsuarioId()).getResultList();
+        } catch (NullPointerException e){
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }       
+        return null;
+    }
+    
     public Integer setCrearRequerimiento(String desc,Usuario user){        
         try {            
             Encabezadorequerimiento requerimiento = new Encabezadorequerimiento();
             requerimiento.setEncabezadoRequerimientoDeta(desc);
             requerimiento.setUsuarioId(user);
             requerimiento.setUsuarioCreador(user.getUsuarioId());
-            requerimiento.setEstadoId(em.find(Estado.class, 1));
+            requerimiento.setEstadoId(em.find(Estado.class, EstadoEnum.PENDIENTE.getId()));
             create(requerimiento);
             return requerimiento.getEncabezadoRequerimientoId();
         } catch (Exception e) {
@@ -65,5 +77,24 @@ public class EncabezadoRequerimientoEJB extends AbstractFacade<Encabezadorequeri
         } catch (Exception e) {
         }
         return false;
+    }
+    
+    public void setEditarRq(Encabezadorequerimiento rq){
+        try {
+            edit(rq);
+        } catch (Exception e) {
+        }
+    }
+    
+    public void actualizarRechazado(){
+    
+    }
+    
+    public void actualizarAprobado(){
+    
+    }
+    
+    public void actualizarEnAprobacion(){
+    
     }
 }

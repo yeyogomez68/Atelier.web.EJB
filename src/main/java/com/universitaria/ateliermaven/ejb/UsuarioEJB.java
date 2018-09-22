@@ -11,8 +11,11 @@ import com.universitaria.atelier.web.jpa.Estado;
 import com.universitaria.atelier.web.jpa.Roll;
 import com.universitaria.atelier.web.jpa.Usuario;
 import com.universitaria.atelier.web.utils.UsuarioUtil;
+import com.universitaria.ateliermaven.ejb.security.EncryptDataEJB;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.EJB;
+
 import javax.ejb.Stateless;
 import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
@@ -25,16 +28,19 @@ import javax.persistence.Query;
 @Stateless
 public class UsuarioEJB extends AbstractFacade<Usuario> {
 
+    @EJB
+    private EncryptDataEJB encryptDataEJB;
+    
     public UsuarioEJB() {
         super(Usuario.class);
     }
 
     public Usuario getAccess(String user, String password) {
-        try {
+        try {            
 //            Query q1= em.createNativeQuery("Select * from Usuario Where UsuarioEmail = ?1 And UsuarioPassword = ?2 ",Usuario.class)
 //                    .setParameter(1, user)
 //                    .setParameter(2, password);
-            Query q1 = em.createNamedQuery("Usuario.findByLogin", Usuario.class).setParameter("usuarioEmail", user).setParameter("usuarioPassword", password);
+            Query q1 = em.createNamedQuery("Usuario.findByLogin", Usuario.class).setParameter("usuarioEmail", user).setParameter("usuarioPassword", encryptDataEJB.encryptText(password));
             return (Usuario) q1.getSingleResult();
         } catch (NoResultException e) {
             System.out.println("UsuarioFacade.getAccess() NoResultException");
@@ -58,18 +64,18 @@ public class UsuarioEJB extends AbstractFacade<Usuario> {
 
     public boolean setCrearUsuario(UsuarioUtil usuarioCrear) {
         try {
-            Usuario usuari = new Usuario();
-            usuari.setUsuarioIdentificacion(Integer.parseInt(usuarioCrear.getIdentificacion()));
-            usuari.setUsuarioNombre(usuarioCrear.getNombre());
-            usuari.setUsuarioApellido(usuarioCrear.getApellido());
-            usuari.setUsuarioEmail(usuarioCrear.getEmail());
-            usuari.setUsuarioPassword(usuarioCrear.getPassword());
-            usuari.setUsuarioDireccion(usuarioCrear.getDireccion());
-            usuari.setUsuarioCel(usuarioCrear.getCelular());
-            usuari.setEstadoId(em.find(Estado.class, Integer.parseInt(usuarioCrear.getEstadoId())));
-            usuari.setRollId(em.find(Roll.class, Integer.parseInt(usuarioCrear.getRollId())));
-            usuari.setCiudadId(em.find(Ciudad.class, Integer.parseInt(usuarioCrear.getCiudadId())));
-            create(usuari);
+            Usuario usuario = new Usuario();
+            usuario.setUsuarioIdentificacion(Integer.parseInt(usuarioCrear.getIdentificacion()));
+            usuario.setUsuarioNombre(usuarioCrear.getNombre());
+            usuario.setUsuarioApellido(usuarioCrear.getApellido());
+            usuario.setUsuarioEmail(usuarioCrear.getEmail());
+            usuario.setUsuarioPassword(encryptDataEJB.encryptText(usuarioCrear.getPassword()));
+            usuario.setUsuarioDireccion(usuarioCrear.getDireccion());
+            usuario.setUsuarioCel(usuarioCrear.getCelular());
+            usuario.setEstadoId(em.find(Estado.class, Integer.parseInt(usuarioCrear.getEstadoId())));
+            usuario.setRollId(em.find(Roll.class, Integer.parseInt(usuarioCrear.getRollId())));
+            usuario.setCiudadId(em.find(Ciudad.class, Integer.parseInt(usuarioCrear.getCiudadId())));
+            create(usuario);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,7 +98,21 @@ public class UsuarioEJB extends AbstractFacade<Usuario> {
         return lista;
     }
 
-   public boolean getExisteUsuario(String usuarioNombre) {
+    public List<SelectItem> getSelectItemUsuarios(String roll) {
+        List<SelectItem> lista = new ArrayList<>();
+        try {
+            for (Usuario usuario : (ArrayList<Usuario>) em.createNamedQuery("Usuario.findByRoll", Usuario.class).setParameter("rollId", roll).getResultList()) {
+                lista.add(new SelectItem(usuario.getUsuarioId(), usuario.getUsuarioNombre() + " " + usuario.getUsuarioApellido()));
+            }
+            return lista;
+        } catch (NullPointerException e) {
+            return lista;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+       public boolean getExisteUsuario(String usuarioNombre) {
         try {
             return (em.createNamedQuery("Usuario.findByUsuarioIdentificacion").setParameter("usuarioIdentificacion", usuarioNombre).getSingleResult() != null);
         } catch (Exception e) {
@@ -118,7 +138,5 @@ public class UsuarioEJB extends AbstractFacade<Usuario> {
         }
         return false;
     }  
-    
-    
-    
+
 }
