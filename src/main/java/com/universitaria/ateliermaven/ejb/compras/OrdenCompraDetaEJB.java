@@ -6,7 +6,13 @@
 package com.universitaria.ateliermaven.ejb.compras;
 
 import com.universitaria.atelier.web.jpa.AbstractFacade;
+import com.universitaria.atelier.web.jpa.Estado;
 import com.universitaria.atelier.web.jpa.Ordencompradeta;
+import com.universitaria.atelier.web.jpa.Requestdeta;
+import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
+import java.util.ArrayList;
+import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 /**
@@ -15,9 +21,31 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class OrdenCompraDetaEJB  extends AbstractFacade<Ordencompradeta>{
+    @EJB
+    private DetalleRequerimientoEJB detalleRequerimientoEJB;
     
     public OrdenCompraDetaEJB() {
         super(Ordencompradeta.class);
+    }
+    
+    public List<Ordencompradeta> getDetalleRqForOc(){
+        List<Ordencompradeta> list = new ArrayList<>();        
+        try {
+            for (Requestdeta rqDeta : detalleRequerimientoEJB.obtenerDetallePendCompra()) {
+                Ordencompradeta orCo = new Ordencompradeta();
+                orCo.setEncabezadoRequerimientoId(rqDeta.getEncabezadoRequerimientoId());
+                orCo.setMaterialId(rqDeta.getMaterialId());
+                orCo.setOrdenCompraCantidad(rqDeta.getRequestDetaCantidad());                
+                orCo.setOrdenCompraValorUnit(new Double(0));
+                orCo.setOrdenCompraDetaTotBruto(new Double(0));
+                orCo.setOrdenCompraIVA(new Double(0));
+                orCo.setOrdenCompraValorTot(new Double(0));
+                orCo.setEstadoId(em.find(Estado.class, EstadoEnum.COMPRAS.getId()));
+                list.add(orCo);
+            }
+        } catch (Exception e) {
+        }
+        return list;
     }
     
 }

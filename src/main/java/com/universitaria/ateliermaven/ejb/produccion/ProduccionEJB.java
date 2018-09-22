@@ -56,14 +56,14 @@ public class ProduccionEJB extends AbstractFacade<Produccion> {
     public boolean setCrearProduccion(ProduccionUtil produccionUtil) {
         try {
             Produccion produccion = new Produccion();
-            produccion.setProduccionFecha(produccionUtil.getProduccionFecha());
-            produccion.setProduccionInicioHora(produccionUtil.getProduccionInicioHora());
+//            produccion.setProduccionFecha(produccionUtil.getProduccionFecha());
+//            produccion.setProduccionInicioHora(produccionUtil.getProduccionInicioHora());
             produccion.setProduccionDiaEstimated(Float.parseFloat(produccionUtil.getProduccionDiaEstimated()));
             produccion.setPrendaId(em.find(Prenda.class, Integer.parseInt(produccionUtil.getPrendaId())));
             produccion.setEstadoId(em.find(Estado.class, Integer.parseInt(produccionUtil.getEstadoId())));
             Usuario usuario = em.find(Usuario.class, Integer.parseInt(produccionUtil.getUsuarioId()));
             produccion.setUsuarioCreador(usuario);
-            produccion.setUsuarioId(usuario);
+//            produccion.setUsuarioId(usuario);
             produccion.setProduccionDescripcion(produccionUtil.getProduccionDescripcion());
 
             create(produccion);

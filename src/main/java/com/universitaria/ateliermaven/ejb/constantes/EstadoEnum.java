@@ -22,7 +22,8 @@ public enum EstadoEnum {
     RESERVADO(9),
     ALQUILADO(10),
     VENDIDO(11),
-    RETORNADO(12);
+    RETORNADO(12),
+    COMPRAS(13);
     
     private int id;
 

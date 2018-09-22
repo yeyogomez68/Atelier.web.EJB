@@ -61,7 +61,7 @@ public class PrendasEJB extends AbstractFacade<Prenda> {
 
             prenda.setPrendaNombre(prendaUtil.getPrendaNombre());
             prenda.setPrendaTipoId(em.find(Prendatipo.class, Integer.parseInt(prendaUtil.getPrendaTipoId())));
-            prenda.setMaterialId(em.find(Material.class, Integer.parseInt(prendaUtil.getMaterialId())));
+//            prenda.setMaterialId(em.find(Material.class, Integer.parseInt(prendaUtil.getMaterialId())));
             prenda.setColorId(em.find(Color.class, Integer.parseInt(prendaUtil.getColorId())));
             prenda.setPrendaDescripcion(prendaUtil.getPrendaDescripcion());
             prenda.setOcasionId(em.find(Ocasion.class, Integer.parseInt(prendaUtil.getOcasionId())));

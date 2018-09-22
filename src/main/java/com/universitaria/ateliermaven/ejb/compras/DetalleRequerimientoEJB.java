@@ -64,6 +64,16 @@ public class DetalleRequerimientoEJB extends AbstractFacade<Requestdeta> {
         return lista;
     }
     
+    public List<Requestdeta> obtenerDetallePendCompra(){
+        List<Requestdeta> lista = new ArrayList<>();
+        try {            
+            return em.createNamedQuery("Requestdeta.findByPendCompra", Requestdeta.class).setParameter("estadoId", EstadoEnum.APROBADO.getId()).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }        
+        return lista;
+    }
+    
     public boolean crearDetalleRequerimiento(Integer idEncabeza, List<MaterialRequerimientoUtil> listMaterial, Usuario user){
         try {
             for (MaterialRequerimientoUtil mat : listMaterial) {

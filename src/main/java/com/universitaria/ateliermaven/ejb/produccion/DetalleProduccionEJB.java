@@ -55,9 +55,9 @@ public class DetalleProduccionEJB extends AbstractFacade<Producciondeta> {
         try {
             Producciondeta produccionDeta = new Producciondeta();
 
-            produccionDeta.setMaterialId(Integer.parseInt(detalleProduccionUtil.getMaterialId()));
+//            produccionDeta.setMaterialId(Integer.parseInt(detalleProduccionUtil.getMaterialId()));
             produccionDeta.setProduccionId(em.find(Produccion.class, Integer.parseInt(detalleProduccionUtil.getProduccionId())));
-            produccionDeta.setProduccionDetaCant(Float.parseFloat(detalleProduccionUtil.getProduccionDetaCant()));
+//            produccionDeta.setProduccionDetaCant(Float.parseFloat(detalleProduccionUtil.getProduccionDetaCant()));
             produccionDeta.setProduccionDetaFecha(detalleProduccionUtil.getProduccionDetaFecha());
 
             create(produccionDeta);

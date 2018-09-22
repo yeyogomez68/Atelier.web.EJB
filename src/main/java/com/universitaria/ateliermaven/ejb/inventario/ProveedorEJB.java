@@ -13,6 +13,7 @@ import com.universitaria.atelier.web.utils.ProveedorUtil;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.faces.model.SelectItem;
 
 /**
  *
@@ -35,6 +36,21 @@ public class ProveedorEJB extends AbstractFacade<Proveedor> {
             e.printStackTrace();
         }
         return null;
+    }
+    
+        public List<SelectItem> getSelectItemProveedor() {
+        List<SelectItem> lista = new ArrayList<>();
+        try {
+            for (Proveedor prov : getProveedores()) {
+                lista.add(new SelectItem(prov.getProveedorId(), prov.getNit() + " " + prov.getProveedorNombre()));
+            }
+            return lista;
+        } catch (NullPointerException e) {
+            return lista;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
     }
 
     public boolean setCrearProveedor(ProveedorUtil nuevoProveedor) {
