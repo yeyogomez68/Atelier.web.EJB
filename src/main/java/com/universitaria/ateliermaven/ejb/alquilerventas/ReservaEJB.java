@@ -84,11 +84,33 @@ public class ReservaEJB extends AbstractFacade<Reservacion> {
         return false;
     }
 
+    public boolean entregarReservacionVenta(Reservacion reservacion, Usuario usuario, Integer valor) {
+        try {
+            Renta renta = new Renta();
+            renta.setClienteId(reservacion.getClienteId());
+
+            renta.setEstadoId(em.find(Estado.class, EstadoEnum.VENDIDO.getId()));
+            Calendar cal = Calendar.getInstance();
+            renta.setRentaIdFecha(cal);
+
+            renta.setRentaTot(valor);
+            renta.setUsuarioId(usuario);
+            if (rentaEJB.setCrearRentaReservacion(renta, reservacion)) {
+                reservacion.setEstadoId(renta.getEstadoId());
+                edit(reservacion);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean liberarReservacion(Reservacion reservacion) {
         try {
-
-            reservacion.setEstadoId(em.find(Estado.class, EstadoEnum.INACTIVO));
+            reservacion.setEstadoId(em.find(Estado.class, EstadoEnum.INACTIVO.getId()));
             edit(reservacion);
+            stockPrendaEJB.setModificarStockPrenda(reservacion.getPrendaId(), 1);
             return true;
 
         } catch (Exception e) {

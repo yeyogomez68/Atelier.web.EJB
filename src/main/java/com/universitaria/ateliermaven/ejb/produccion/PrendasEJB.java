@@ -137,6 +137,37 @@ public class PrendasEJB extends AbstractFacade<Prenda> {
         return null;
     }
 
+    public List<PrendaUtil> getPrendasProduccionDisponibles() {
+        List<PrendaUtil> list = new ArrayList<>();
+        try {
+
+            for (Stockprenda sp : stockPrendaEJB.getStockPrenda()) {
+
+                if (sp.getStockPrendaCant() > 0) {
+                    PrendaUtil util = new PrendaUtil();
+                    util.setCantidad("0");
+                    util.setColorId(String.valueOf(sp.getPrendaId().getColorId().getColorId()));
+                    util.setEstadoId(String.valueOf(sp.getPrendaId().getEstadoId().getEstadoId()));
+                    util.setOcasionId(String.valueOf(sp.getPrendaId().getOcasionId().getOcasionId()));
+                    util.setPrendaDescripcion(sp.getPrendaId().getPrendaDescripcion());
+                    util.setPrendaId(String.valueOf(sp.getPrendaId().getPrendaId()));
+                    util.setPrendaNombre(sp.getPrendaId().getPrendaNombre());
+                    util.setPrendaTipoId(String.valueOf(sp.getPrendaId().getPrendaTipoId().getPrendaTipoId()));
+                    util.setValor("0");
+                    list.add(util);
+
+                }
+
+            }
+            return list;
+        } catch (NullPointerException e) {
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public StockPrendaEJB getStockPrendaEJB() {
         return stockPrendaEJB;
     }

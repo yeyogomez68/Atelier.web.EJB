@@ -7,6 +7,7 @@ package com.universitaria.ateliermaven.ejb.alquilerventas;
 
 import com.universitaria.atelier.web.jpa.AbstractFacade;
 import com.universitaria.atelier.web.jpa.Estado;
+import com.universitaria.atelier.web.jpa.Prenda;
 import com.universitaria.atelier.web.jpa.Renta;
 import com.universitaria.atelier.web.jpa.Rentadeta;
 import com.universitaria.atelier.web.jpa.Reservacion;
@@ -64,6 +65,24 @@ public class DetalleRentaEJB extends AbstractFacade<Rentadeta> {
             rd.setRentaVu(renta.getRentaTot());
             rd.setReservacionId(reservacion);
             create(rd);
+            return true;
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    public boolean setCrearDetalleRenta(Renta renta, Prenda prenda, int vu) {
+        try {
+            Rentadeta rd = new Rentadeta();
+            rd.setEstadoId(renta.getEstadoId());
+            rd.setPrendaId(prenda);
+            rd.setRentaDetaFecha(renta.getRentaIdFecha());
+            rd.setRentaDetaReinEstadomentFecha(renta.getRentaReinEstadomentFecha());
+            rd.setRentaId(renta);
+            rd.setRentaVu(vu);
+            rd.setReservacionId(null);
+            create(rd);
+            stockPrendaEJB.setModificarStockPrenda(prenda, -1);
             return true;
         } catch (Exception e) {
         }

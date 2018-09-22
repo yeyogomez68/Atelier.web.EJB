@@ -23,6 +23,7 @@ public class PrendaUtil {
     private String usuarioId;
     private String URL;
     private String ubicacion;
+    private String valor;
 
     public String getPrendaId() {
         return prendaId;
@@ -118,6 +119,14 @@ public class PrendaUtil {
 
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
+    }
+
+    public String getValor() {
+        return valor;
+    }
+
+    public void setValor(String valor) {
+        this.valor = valor;
     }
 
 }
