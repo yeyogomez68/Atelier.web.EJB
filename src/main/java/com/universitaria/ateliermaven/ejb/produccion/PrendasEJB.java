@@ -15,6 +15,7 @@ import com.universitaria.atelier.web.jpa.Prendatipo;
 import com.universitaria.atelier.web.jpa.Stockprenda;
 import com.universitaria.atelier.web.jpa.Talla;
 import com.universitaria.atelier.web.utils.PrendaUtil;
+import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
 import com.universitaria.ateliermaven.ejb.inventario.StockPrendaEJB;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,7 @@ public class PrendasEJB extends AbstractFacade<Prenda> {
             prenda.setColorId(em.find(Color.class, Integer.parseInt(prendaUtil.getColorId())));
             prenda.setPrendaDescripcion(prendaUtil.getPrendaDescripcion());
             prenda.setOcasionId(em.find(Ocasion.class, Integer.parseInt(prendaUtil.getOcasionId())));
-            prenda.setEstadoId(em.find(Estado.class, Integer.parseInt(prendaUtil.getEstadoId())));
+            prenda.setEstadoId(em.find(Estado.class, EstadoEnum.DISPONIBLE.getId()));
             prenda.setTallaId(em.find(Talla.class, Integer.parseInt(prendaUtil.getTallaId())));
             prenda.setUbicacion(prendaUtil.getUbicacion());
             prenda.setUrl(prendaUtil.getURL());

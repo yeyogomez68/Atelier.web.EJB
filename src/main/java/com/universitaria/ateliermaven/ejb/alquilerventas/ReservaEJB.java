@@ -67,10 +67,11 @@ public class ReservaEJB extends AbstractFacade<Reservacion> {
             renta.setClienteId(reservacion.getClienteId());
             renta.setDiaRenta(reservacion.getReservacionLimit());
             renta.setEstadoId(em.find(Estado.class, EstadoEnum.ALQUILADO.getId()));
-            Calendar cal = Calendar.getInstance();
-            renta.setRentaIdFecha(cal);
-            cal.add(Calendar.DATE, reservacion.getReservacionLimit());
-            renta.setRentaReinEstadomentFecha(cal);
+            Calendar cal1 = Calendar.getInstance();
+            renta.setRentaIdFecha(cal1);
+            Calendar cal2 = Calendar.getInstance();
+            cal2.add(Calendar.DATE, reservacion.getReservacionLimit());
+            renta.setRentaReinEstadomentFecha(cal2);
             renta.setRentaTot(valor);
             renta.setUsuarioId(usuario);
             if (rentaEJB.setCrearRentaReservacion(renta, reservacion)) {

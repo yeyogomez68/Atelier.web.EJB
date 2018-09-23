@@ -18,19 +18,20 @@ import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.persistence.NoResultException;
 
 /**
  *
  * @author jeisson.gomez
  */
 @Stateless
-public class OrdenCompraDetaEJB  extends AbstractFacade<Ordencompradeta>{
+public class OrdenCompraDetaEJB extends AbstractFacade<Ordencompradeta> {
+
     @EJB
     private DetalleRequerimientoEJB detalleRequerimientoEJB;
-    
+
     public OrdenCompraDetaEJB() {
         super(Ordencompradeta.class);
     }
@@ -53,13 +54,14 @@ public class OrdenCompraDetaEJB  extends AbstractFacade<Ordencompradeta>{
         }
         return list;
     }
-    
 
-
-    public List<Ordencompradeta> getOrdenCompraDetaPorEstado(int estado) {
+    public List<Ordencompradeta> getOrdenCompraDetaPorEstado() {
 
         try {
-            return em.createNamedQuery("Ordencompradeta.findByEstadoId", Ordencompradeta.class).setParameter("estadoId", em.find(Estado.class, estado)).getResultList();
+            return em.createNamedQuery("Ordencompradeta.findByEstadoId", Ordencompradeta.class).setParameter("estadoId", em.find(Estado.class, EstadoEnum.COMPRAS.getId())).getResultList();
+        } catch (NoResultException nre) {
+            System.out.println("com.universitaria.ateliermaven.ejb.compras.OrdenCompraDetaEJB.getOrdenCompraDetaPorEstado()");
+            nre.getMessage();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,5 +111,3 @@ public class OrdenCompraDetaEJB  extends AbstractFacade<Ordencompradeta>{
         return null;
     }
 }
-
-    
