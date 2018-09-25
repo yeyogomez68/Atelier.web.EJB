@@ -36,12 +36,13 @@ public class DetallePrendaEJB extends AbstractFacade<Prendamaterial> {
         return null;
     }
 
-    public boolean setCrearDetallePrenda(String idMaterial, String idPrenda) {
+    public boolean setCrearDetallePrenda(String idMaterial, String idPrenda, String cantidad) {
         try {
             if (!existeDetallePrenda(idMaterial, idPrenda)) {
                 Prendamaterial pm = new Prendamaterial();
                 pm.setMaterialId(em.find(Material.class, Integer.parseInt(idMaterial)));
                 pm.setPrendaId(em.find(Prenda.class, Integer.parseInt(idPrenda)));
+                pm.setCantidad(Double.parseDouble(cantidad));
                 create(pm);
                 return true;
             }
@@ -79,9 +80,23 @@ public class DetallePrendaEJB extends AbstractFacade<Prendamaterial> {
         return false;
     }
 
+    public List<Prendamaterial> getMaterialesPorPrenda(String idPrenda) {
+        try {
+            return em.createNamedQuery("Prendamaterial.findByPrendaId", Prendamaterial.class)
+                    .setParameter("prendaId", em.find(Prenda.class, Integer.parseInt(idPrenda)))
+                    .getResultList();
+
+        } catch (NoResultException nre) {
+            System.out.println("com.universitaria.ateliermaven.ejb.produccion.DetallePrendaEJB.existeDetallePrenda()");
+            nre.getMessage();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public boolean setBorrarDetallePrenda(Prendamaterial pm) {
         try {
-
             remove(pm);
             return true;
         } catch (Exception e) {

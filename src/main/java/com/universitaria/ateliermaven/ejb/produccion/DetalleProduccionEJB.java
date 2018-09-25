@@ -16,6 +16,7 @@ import com.universitaria.atelier.web.utils.DetalleProduccionUtil;
 import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
 import com.universitaria.ateliermaven.ejb.inventario.StockMaterialesEJB;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import javax.ejb.EJB;
@@ -68,12 +69,12 @@ public class DetalleProduccionEJB extends AbstractFacade<Producciondeta> {
         try {
             Producciondeta produccionDeta = new Producciondeta();
             Material material = em.find(Material.class, Integer.parseInt(detalleProduccionUtil.getMaterialId()));
-            int cantidad = Integer.parseInt(detalleProduccionUtil.getProduccionDetaCant());
+            Double cantidad = Double.parseDouble(detalleProduccionUtil.getProduccionDetaCant());
             Stockmateriales sm = stockMaterialesEJB.getStockMaterial(material);
             if (sm.getCantidad() >= cantidad) {
                 produccionDeta.setMaterialId(material);
                 produccionDeta.setProduccionId(em.find(Produccion.class, Integer.parseInt(detalleProduccionUtil.getProduccionId())));
-                produccionDeta.setProduccionDetaCant(new Float(cantidad));
+                produccionDeta.setProduccionDetaCant(new Double(cantidad));
                 produccionDeta.setProduccionDetaFecha(detalleProduccionUtil.getProduccionDetaFecha());
                 produccionDeta.setEstadoId(em.find(Estado.class, Integer.parseInt(detalleProduccionUtil.getEstadoId())));
                 produccionDeta.setUsuarioAsignado(em.find(Usuario.class, Integer.parseInt(detalleProduccionUtil.getUsuarioId())));

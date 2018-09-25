@@ -78,7 +78,7 @@ public class MaterialEJB extends AbstractFacade<Material> {
             mate.setUbicacion(material.getUbicacion());
             create(mate);
             Stockmateriales sm = new Stockmateriales();
-            sm.setCantidad(0);
+            sm.setCantidad(new Double(0));
             sm.setMaterialId(mate);
             stockMaterialesEJB.setCrearStockMaterial(sm);
             return true;

@@ -60,7 +60,7 @@ public class StockMaterialesEJB extends AbstractFacade<Stockmateriales> {
         return false;
     }
 
-    public boolean setModificarStockMaterial(Material material, int cantidad) {
+    public boolean setModificarStockMaterial(Material material, Double cantidad) {
         try {
             Stockmateriales sm = em.createNamedQuery("Stockmateriales.findByMaterialId", Stockmateriales.class).setParameter("materialId", material).getSingleResult();
             sm.setCantidad(sm.getCantidad() + cantidad);

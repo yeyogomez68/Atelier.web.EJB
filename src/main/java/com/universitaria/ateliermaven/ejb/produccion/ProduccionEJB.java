@@ -8,9 +8,11 @@ package com.universitaria.ateliermaven.ejb.produccion;
 import com.universitaria.atelier.web.jpa.AbstractFacade;
 import com.universitaria.atelier.web.jpa.Estado;
 import com.universitaria.atelier.web.jpa.Prenda;
+import com.universitaria.atelier.web.jpa.Prendamaterial;
 import com.universitaria.atelier.web.jpa.Produccion;
 import com.universitaria.atelier.web.jpa.Producciondeta;
 import com.universitaria.atelier.web.jpa.Usuario;
+import com.universitaria.atelier.web.utils.DetalleProduccionUtil;
 import com.universitaria.atelier.web.utils.ProduccionUtil;
 import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
 import com.universitaria.ateliermaven.ejb.inventario.StockPrendaEJB;
@@ -33,6 +35,8 @@ public class ProduccionEJB extends AbstractFacade<Produccion> {
     private DetalleProduccionEJB detalleProduccionEJB;
     @EJB
     private StockPrendaEJB stockPrendaEJB;
+    @EJB
+    private DetallePrendaEJB detallePrendaEJB;
 
     public ProduccionEJB() {
         super(Produccion.class);
@@ -64,7 +68,10 @@ public class ProduccionEJB extends AbstractFacade<Produccion> {
         return lista;
     }
 
-    public boolean setCrearProduccion(ProduccionUtil produccionUtil) {
+    public String setCrearProduccion(ProduccionUtil produccionUtil) {
+        String mensaje = "";
+        boolean errorDetalle = false;
+
         try {
             Produccion produccion = new Produccion();
             Calendar cal = Calendar.getInstance();
@@ -74,15 +81,50 @@ public class ProduccionEJB extends AbstractFacade<Produccion> {
             produccion.setEstadoId(em.find(Estado.class, Integer.parseInt(produccionUtil.getEstadoId())));
             produccion.setAvance(Integer.parseInt(produccionUtil.getAvance()));
             produccion.setPrendaId(em.find(Prenda.class, Integer.parseInt(produccionUtil.getPrendaId())));
+            produccion.setCantidad(Integer.parseInt(produccionUtil.getCantidad()));
             Usuario usuario = em.find(Usuario.class, Integer.parseInt(produccionUtil.getUsuarioCreador()));
             produccion.setUsuarioCreador(usuario);
             produccion.setProduccionDescripcion(produccionUtil.getProduccionDescripcion());
             create(produccion);
-            return true;
+
+            List<Prendamaterial> prendaMaterial = detallePrendaEJB.getMaterialesPorPrenda(produccionUtil.getPrendaId());
+            if (prendaMaterial != null && !prendaMaterial.isEmpty()) {
+                for (Prendamaterial pm : detallePrendaEJB.getMaterialesPorPrenda(produccionUtil.getPrendaId())) {
+                    DetalleProduccionUtil dpu = new DetalleProduccionUtil();
+                    dpu.setMaterialId(String.valueOf(pm.getMaterialId().getMaterialId()));
+                    dpu.setProduccionDetaCant(String.valueOf(doubleRound(pm.getCantidad() * produccion.getCantidad(), 2)));
+                    dpu.setProduccionDetaFecha(Calendar.getInstance().getTime());
+                    dpu.setProduccionId(String.valueOf(produccion.getProduccionId()));
+                    dpu.setEstadoId(String.valueOf(EstadoEnum.ACTIVO.getId()));
+                    dpu.setUsuarioId(produccionUtil.getUsuarioCreador());
+                    if (!detalleProduccionEJB.setCrearDetalleProduccion(dpu)) {
+                        errorDetalle = true;
+                    }
+                }
+            } else {
+                remove(produccion);
+                return "No se encontraron materiales asignados a esta prenda, no es posible registrar produccion";
+            }
+            if (errorDetalle) {
+                remove(produccion);
+            }
+            mensaje = (errorDetalle ? "No se ha logrado crear la produccion, verifique existencia de materiales" : "Produccion registrada correctamente");
         } catch (Exception e) {
             e.printStackTrace();
+            mensaje = "Ha ocurrido un error registrando la produccion, contacte al administrador";
         }
-        return false;
+        return mensaje;
+    }
+
+    private double doubleRound(double value, int places) {
+        if (places < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 
     public boolean getexisteProduccion(String produccionDescripcion) {
@@ -121,7 +163,7 @@ public class ProduccionEJB extends AbstractFacade<Produccion> {
                 }
 
                 if (Integer.parseInt(estadoId) == EstadoEnum.APROBADO.getId()) {
-                    stockPrendaEJB.setModificarStockPrenda(produccion.getPrendaId(), 1);
+                    stockPrendaEJB.setModificarStockPrenda(produccion.getPrendaId(), produccion.getCantidad());
                 }
 
                 Estado estado = em.find(Estado.class, Integer.parseInt(estadoId));

@@ -23,6 +23,7 @@ public class ProduccionUtil {
     private String produccionDescripcion;
     private String prendaId;
     private String avance;
+    private String cantidad;
 
     public String getProduccionId() {
         return produccionId;
@@ -96,4 +97,14 @@ public class ProduccionUtil {
         this.prendaId = prendaId;
     }
 
+    public String getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(String cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    
+    
 }
