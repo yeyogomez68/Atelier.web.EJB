@@ -5,6 +5,8 @@
  */
 package com.universitaria.atelier.web.utils;
 
+import java.io.File;
+
 /**
  *
  * @author SoulHunter

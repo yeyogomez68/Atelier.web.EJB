@@ -15,6 +15,11 @@ import com.universitaria.atelier.web.jpa.Usuario;
 import com.universitaria.atelier.web.utils.ReservacionUtil;
 import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
 import com.universitaria.ateliermaven.ejb.inventario.StockPrendaEJB;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -61,7 +66,7 @@ public class ReservaEJB extends AbstractFacade<Reservacion> {
         return null;
     }
 
-    public boolean entregarReservacionRenTa(Reservacion reservacion, Usuario usuario, Integer valor) {
+    public boolean entregarReservacionRenTa(Reservacion reservacion, Usuario usuario, Integer valor, List<File> listadeArchivos) {
         try {
             Renta renta = new Renta();
             renta.setClienteId(reservacion.getClienteId());
@@ -74,11 +79,12 @@ public class ReservaEJB extends AbstractFacade<Reservacion> {
             renta.setRentaReinEstadomentFecha(cal2);
             renta.setRentaTot(valor);
             renta.setUsuarioId(usuario);
-            if (rentaEJB.setCrearRentaReservacion(renta, reservacion)) {
+            if (rentaEJB.setCrearRentaReservacion(renta, reservacion,listadeArchivos)) {
                 reservacion.setEstadoId(renta.getEstadoId());
                 edit(reservacion);
                 return true;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -9,17 +9,24 @@ import com.universitaria.atelier.web.jpa.AbstractFacade;
 import com.universitaria.atelier.web.jpa.Estado;
 import com.universitaria.atelier.web.jpa.Prenda;
 import com.universitaria.atelier.web.jpa.Renta;
-import com.universitaria.atelier.web.jpa.Rentadeta;
 import com.universitaria.atelier.web.jpa.Reservacion;
 import com.universitaria.atelier.web.jpa.Usuario;
 import com.universitaria.atelier.web.utils.AlquilarUtil;
 import com.universitaria.atelier.web.utils.ClienteEJB;
 import com.universitaria.atelier.web.utils.PrendaUtil;
 import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
-import com.universitaria.ateliermaven.ejb.inventario.StockPrendaEJB;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -87,7 +94,30 @@ public class RentaEJB extends AbstractFacade<Renta> {
         return false;
     }
 
-    public boolean setCrearRenta(List<PrendaUtil> prenda, AlquilarUtil alquilar, Usuario usuario) {
+    public boolean setCrearRentaReservacion(Renta renta, Reservacion reservacion, List<File> listadeArchivos) {
+        try {
+            create(renta);
+            File fileImage = null;
+            for (File f : listadeArchivos) {
+                String ex = f.getName().substring(f.getName().indexOf("."));
+                if (f.getName().equals(reservacion.getPrendaId().getPrendaNombre() + ex)) {
+                    fileImage = f;
+                }
+            }
+
+            if (detalleRentaEJB.setCrearDetalleRentaReservacion(renta, reservacion, fileImage)) {
+                return true;
+            } else {
+                remove(renta);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean setCrearRenta(List<PrendaUtil> prenda, AlquilarUtil alquilar, Usuario usuario, List<File> listadeArchivos) {
         try {
             Renta r = new Renta();
             r.setClienteId(clienteEJB.clientePorIdentificacion(alquilar.getClienteId()));
@@ -95,8 +125,9 @@ public class RentaEJB extends AbstractFacade<Renta> {
             r.setDiaRenta(Integer.parseInt(alquilar.getDiaRenta()));
             r.setEstadoId(em.find(Estado.class, EstadoEnum.ALQUILADO.getId()));
             r.setRentaIdFecha(cal);
-            cal.add(Calendar.DATE, Integer.parseInt(alquilar.getDiaRenta()));
-            r.setRentaReinEstadomentFecha(cal);
+            Calendar cal2 = Calendar.getInstance();
+            cal2.add(Calendar.DATE, Integer.parseInt(alquilar.getDiaRenta()));
+            r.setRentaReinEstadomentFecha(cal2);
             int rentaTotal = 0;
             for (PrendaUtil p : prenda) {
                 rentaTotal += Integer.parseInt(p.getValor());
@@ -105,16 +136,52 @@ public class RentaEJB extends AbstractFacade<Renta> {
             r.setUsuarioId(usuario);
             create(r);
             for (PrendaUtil p : prenda) {
-                if (!detalleRentaEJB.setCrearDetalleRenta(r, em.find(Prenda.class, Integer.parseInt(p.getPrendaId())), Integer.parseInt(p.getValor()))) {
+                File fileImage = null;
+
+                for (File f : listadeArchivos) {
+                    String ex = f.getName().substring(f.getName().indexOf("."));
+                    if (f.getName().equals(p.getPrendaNombre() + ex)) {
+                        fileImage = f;
+                    }
+                }
+
+                if (!detalleRentaEJB.setCrearDetalleRenta(r, em.find(Prenda.class, Integer.parseInt(p.getPrendaId())), Integer.parseInt(p.getValor()), fileImage)) {
                     remove(r);
                     return false;
                 }
+
             }
+
+            int consecutive = 0;
+            System.out.println("com.universitaria.ateliermaven.ejb.alquilerventas.ReservaEJB.entregarReservacionRenTa()" + listadeArchivos.size());
+            for (File f : listadeArchivos) {
+
+                String ex = f.getName().substring(f.getName().indexOf("."));
+                System.out.println("com.universitaria.ateliermaven.ejb.alquilerventas.ReservaEJB.entregarReservacionRenTa()" + ex);
+                System.out.println("com.universitaria.ateliermaven.ejb.alquilerventas.RentaEJB.setCrearRenta()" + f.getAbsolutePath());
+
+            }
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public InputStream getStreamImages(String img) {
+
+        try {
+            File f = new File(img);
+            if (f.exists()) {
+                System.out.println("com.universitaria.ateliermaven.ejb.alquilerventas.RentaEJB.getStreamImages()" + "Si existe");
+            }
+            return new FileInputStream(f);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(RentaEJB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+
     }
 
     public boolean setCrearVenta(List<PrendaUtil> prenda, AlquilarUtil alquilar, Usuario usuario) {
@@ -133,6 +200,7 @@ public class RentaEJB extends AbstractFacade<Renta> {
             r.setUsuarioId(usuario);
             create(r);
             for (PrendaUtil p : prenda) {
+
                 if (!detalleRentaEJB.setCrearDetalleRenta(r, em.find(Prenda.class, Integer.parseInt(p.getPrendaId())), Integer.parseInt(p.getValor()))) {
                     remove(r);
                     return false;
@@ -144,5 +212,6 @@ public class RentaEJB extends AbstractFacade<Renta> {
         }
         return false;
     }
+
 
 }

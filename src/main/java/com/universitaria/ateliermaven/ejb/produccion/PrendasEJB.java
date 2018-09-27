@@ -103,8 +103,11 @@ public class PrendasEJB extends AbstractFacade<Prenda> {
         return false;
     }
 
-    public boolean setModificarPrenda(Prenda prenda) {
+    public boolean setModificarPrenda(Prenda prenda, String idColor, String idTipoPrenda, String idOcasion) {
         try {
+            prenda.setColorId(em.find(Color.class, Integer.parseInt(idColor)));
+            prenda.setOcasionId(em.find(Ocasion.class, Integer.parseInt(idOcasion)));
+            prenda.setPrendaTipoId(em.find(Prendatipo.class, Integer.parseInt(idTipoPrenda)));
             edit(prenda);
             return true;
         } catch (Exception e) {
