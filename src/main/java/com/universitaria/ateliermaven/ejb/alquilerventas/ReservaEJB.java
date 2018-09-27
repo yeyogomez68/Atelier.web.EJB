@@ -66,20 +66,20 @@ public class ReservaEJB extends AbstractFacade<Reservacion> {
         return null;
     }
 
-    public boolean entregarReservacionRenTa(Reservacion reservacion, Usuario usuario, Integer valor, List<File> listadeArchivos) {
+    public boolean entregarReservacionRenTa(Reservacion reservacion, Usuario usuario, Integer valor, Integer diasRenta, List<File> listadeArchivos) {
         try {
             Renta renta = new Renta();
             renta.setClienteId(reservacion.getClienteId());
-            renta.setDiaRenta(reservacion.getReservacionLimit());
+            renta.setDiaRenta(diasRenta);
             renta.setEstadoId(em.find(Estado.class, EstadoEnum.ALQUILADO.getId()));
             Calendar cal1 = Calendar.getInstance();
             renta.setRentaIdFecha(cal1);
             Calendar cal2 = Calendar.getInstance();
-            cal2.add(Calendar.DATE, reservacion.getReservacionLimit());
+            cal2.add(Calendar.DATE, diasRenta);
             renta.setRentaReinEstadomentFecha(cal2);
             renta.setRentaTot(valor);
             renta.setUsuarioId(usuario);
-            if (rentaEJB.setCrearRentaReservacion(renta, reservacion,listadeArchivos)) {
+            if (rentaEJB.setCrearRentaReservacion(renta, reservacion, listadeArchivos)) {
                 reservacion.setEstadoId(renta.getEstadoId());
                 edit(reservacion);
                 return true;

@@ -98,19 +98,23 @@ public class RentaEJB extends AbstractFacade<Renta> {
         try {
             create(renta);
             File fileImage = null;
-            for (File f : listadeArchivos) {
-                String ex = f.getName().substring(f.getName().indexOf("."));
-                if (f.getName().equals(reservacion.getPrendaId().getPrendaNombre() + ex)) {
-                    fileImage = f;
+            if (listadeArchivos != null && !listadeArchivos.isEmpty()) {
+                for (File f : listadeArchivos) {
+                    String ex = f.getName().substring(f.getName().indexOf("."));
+                    
+                    System.out.println("com.universitaria.ateliermaven.ejb.alquilerventas.RentaEJB.setCrearRentaReservacion()"+reservacion.getPrendaId().getPrendaNombre() + ex +"  "+f.getName());
+                    
+                    if (f.getName().equals(reservacion.getPrendaId().getPrendaNombre() + ex)) {
+                        fileImage = f;
+                    }
                 }
-            }
 
+            }
             if (detalleRentaEJB.setCrearDetalleRentaReservacion(renta, reservacion, fileImage)) {
                 return true;
             } else {
                 remove(renta);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,17 +155,6 @@ public class RentaEJB extends AbstractFacade<Renta> {
                 }
 
             }
-
-            int consecutive = 0;
-            System.out.println("com.universitaria.ateliermaven.ejb.alquilerventas.ReservaEJB.entregarReservacionRenTa()" + listadeArchivos.size());
-            for (File f : listadeArchivos) {
-
-                String ex = f.getName().substring(f.getName().indexOf("."));
-                System.out.println("com.universitaria.ateliermaven.ejb.alquilerventas.ReservaEJB.entregarReservacionRenTa()" + ex);
-                System.out.println("com.universitaria.ateliermaven.ejb.alquilerventas.RentaEJB.setCrearRenta()" + f.getAbsolutePath());
-
-            }
-
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -212,6 +205,5 @@ public class RentaEJB extends AbstractFacade<Renta> {
         }
         return false;
     }
-
 
 }

@@ -63,23 +63,26 @@ public class DetalleRentaEJB extends AbstractFacade<Rentadeta> {
 
     public boolean setCrearDetalleRentaReservacion(Renta renta, Reservacion reservacion, File file) {
         try {
-            Rentadeta rd = new Rentadeta();
-            rd.setEstadoId(renta.getEstadoId());
-            rd.setPrendaId(reservacion.getPrendaId());
-            rd.setRentaDetaFecha(renta.getRentaIdFecha());
-            rd.setRentaDetaReinEstadomentFecha(renta.getRentaReinEstadomentFecha());
-            rd.setRentaId(renta);
-            rd.setRentaVu(renta.getRentaTot());
-            rd.setReservacionId(reservacion);
-            create(rd);
 
-            if (!crearArchivo(file, new File(pathImages, rd.getRentaDetaId() + "_" + file.getName()))) {
-                remove(rd);
-                return false;
+            if (file != null) {
+                Rentadeta rd = new Rentadeta();
+                rd.setEstadoId(renta.getEstadoId());
+                rd.setPrendaId(reservacion.getPrendaId());
+                rd.setRentaDetaFecha(renta.getRentaIdFecha());
+                rd.setRentaDetaReinEstadomentFecha(renta.getRentaReinEstadomentFecha());
+                rd.setRentaId(renta);
+                rd.setRentaVu(renta.getRentaTot());
+                rd.setReservacionId(reservacion);
+                create(rd);
+                if (!crearArchivo(file, new File(pathImages, rd.getRentaDetaId() + "_" + file.getName()))) {
+                    remove(rd);
+                    return false;
+                }
+
+                return true;
             }
-
-            return true;
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -162,15 +165,15 @@ public class DetalleRentaEJB extends AbstractFacade<Rentadeta> {
     }
 
     private boolean crearArchivo(File sourceFile, File destFile) throws IOException {
-
-        File fp = new File(destFile.getPath());
-
-        if (!destFile.exists()) {
-            destFile.createNewFile();
-        }
         FileChannel origen = null;
         FileChannel destino = null;
         try {
+            File fp = new File(destFile.getPath());
+
+            if (!destFile.exists()) {
+                destFile.createNewFile();
+            }
+
             origen = new FileInputStream(sourceFile).getChannel();
             destino = new FileOutputStream(destFile).getChannel();
 
