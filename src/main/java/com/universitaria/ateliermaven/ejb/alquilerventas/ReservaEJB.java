@@ -93,9 +93,9 @@ public class ReservaEJB extends AbstractFacade<Reservacion> {
 
     public boolean entregarReservacionVenta(Reservacion reservacion, Usuario usuario, Integer valor) {
         try {
+            System.out.println("com.universitaria.ateliermaven.ejb.alquilerventas.ReservaEJB.entregarReservacionVenta()");
             Renta renta = new Renta();
             renta.setClienteId(reservacion.getClienteId());
-
             renta.setEstadoId(em.find(Estado.class, EstadoEnum.VENDIDO.getId()));
             Calendar cal = Calendar.getInstance();
             renta.setRentaIdFecha(cal);

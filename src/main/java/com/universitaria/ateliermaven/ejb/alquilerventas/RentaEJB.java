@@ -81,6 +81,7 @@ public class RentaEJB extends AbstractFacade<Renta> {
 
     public boolean setCrearRentaReservacion(Renta renta, Reservacion reservacion) {
         try {
+            System.out.println("com.universitaria.ateliermaven.ejb.alquilerventas.RentaEJB.setCrearRentaReservacion()");
             create(renta);
             if (detalleRentaEJB.setCrearDetalleRentaReservacion(renta, reservacion)) {
                 return true;
@@ -101,9 +102,6 @@ public class RentaEJB extends AbstractFacade<Renta> {
             if (listadeArchivos != null && !listadeArchivos.isEmpty()) {
                 for (File f : listadeArchivos) {
                     String ex = f.getName().substring(f.getName().indexOf("."));
-                    
-                    System.out.println("com.universitaria.ateliermaven.ejb.alquilerventas.RentaEJB.setCrearRentaReservacion()"+reservacion.getPrendaId().getPrendaNombre() + ex +"  "+f.getName());
-                    
                     if (f.getName().equals(reservacion.getPrendaId().getPrendaNombre() + ex)) {
                         fileImage = f;
                     }

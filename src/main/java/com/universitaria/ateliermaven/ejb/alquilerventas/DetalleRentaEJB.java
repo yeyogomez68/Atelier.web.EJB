@@ -89,6 +89,7 @@ public class DetalleRentaEJB extends AbstractFacade<Rentadeta> {
 
     public boolean setCrearDetalleRentaReservacion(Renta renta, Reservacion reservacion) {
         try {
+            System.out.println("com.universitaria.ateliermaven.ejb.alquilerventas.DetalleRentaEJB.setCrearDetalleRentaReservacion()");
             Rentadeta rd = new Rentadeta();
             rd.setEstadoId(renta.getEstadoId());
             rd.setPrendaId(reservacion.getPrendaId());
@@ -100,6 +101,7 @@ public class DetalleRentaEJB extends AbstractFacade<Rentadeta> {
             create(rd);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
