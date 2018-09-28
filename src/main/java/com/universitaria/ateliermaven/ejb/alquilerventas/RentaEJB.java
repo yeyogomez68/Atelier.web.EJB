@@ -12,7 +12,7 @@ import com.universitaria.atelier.web.jpa.Renta;
 import com.universitaria.atelier.web.jpa.Reservacion;
 import com.universitaria.atelier.web.jpa.Usuario;
 import com.universitaria.atelier.web.utils.AlquilarUtil;
-import com.universitaria.atelier.web.utils.ClienteEJB;
+import com.universitaria.ateliermaven.ejb.ClienteEJB;
 import com.universitaria.atelier.web.utils.PrendaUtil;
 import com.universitaria.ateliermaven.ejb.constantes.EstadoEnum;
 import java.io.File;
