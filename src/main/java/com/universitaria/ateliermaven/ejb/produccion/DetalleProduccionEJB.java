@@ -114,7 +114,7 @@ public class DetalleProduccionEJB extends AbstractFacade<Producciondeta> {
     public boolean setModificarDetalleProduccion(Producciondeta produccionDeta, String usuarioId, String estadoId) {
         try {
 
-            if (Integer.parseInt(estadoId) == EstadoEnum.ACTIVO.getId()
+            if (Integer.parseInt(estadoId) != EstadoEnum.INACTIVO.getId()
                     && produccionDeta.getProduccionId().getEstadoId().getEstadoId() != EstadoEnum.ACTIVO.getId()) {
                 return false;
             } else {
