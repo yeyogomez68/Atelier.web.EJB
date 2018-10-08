@@ -23,7 +23,11 @@ public enum EstadoEnum {
     ALQUILADO(10),
     VENDIDO(11),
     RETORNADO(12),
-    COMPRAS(13);
+    COMPRAS(13),
+    PATRONAJE(14),
+    CORTE(15),
+    ARMADO(16),
+    TERMINADO(17);
 
     private int id;
 

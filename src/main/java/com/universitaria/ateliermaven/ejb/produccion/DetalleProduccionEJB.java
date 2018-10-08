@@ -81,7 +81,7 @@ public class DetalleProduccionEJB extends AbstractFacade<Producciondeta> {
                 int avc = calcularAvance(produccionDeta, detalleProduccionUtil.getEstadoId());
                 Produccion np = produccionDeta.getProduccionId();
                 np.setAvance(avc);
-                produccionEJB.setModificarProduccion(np, String.valueOf((avc == 100 ? EstadoEnum.INACTIVO.getId() : EstadoEnum.ACTIVO.getId())));
+                produccionEJB.setModificarProduccion(np, String.valueOf((avc == 100 ? EstadoEnum.TERMINADO.getId() : EstadoEnum.ACTIVO.getId())));
                 create(produccionDeta);
                 stockMaterialesEJB.setModificarStockMaterial(material, -cantidad);
                 return true;
@@ -114,7 +114,7 @@ public class DetalleProduccionEJB extends AbstractFacade<Producciondeta> {
     public boolean setModificarDetalleProduccion(Producciondeta produccionDeta, String usuarioId, String estadoId) {
         try {
 
-            if (Integer.parseInt(estadoId) != EstadoEnum.INACTIVO.getId()
+            if (Integer.parseInt(estadoId) != EstadoEnum.TERMINADO.getId()
                     && produccionDeta.getProduccionId().getEstadoId().getEstadoId() != EstadoEnum.ACTIVO.getId()) {
                 return false;
             } else {
@@ -153,10 +153,10 @@ public class DetalleProduccionEJB extends AbstractFacade<Producciondeta> {
                 for (Producciondeta pdl : pd) {
                     if (Objects.equals(produccionDeta.getProduccionDetaId(), pdl.getProduccionDetaId())) {
                         exist = true;
-                        if (Integer.parseInt(estadoId) == EstadoEnum.INACTIVO.getId()) {
+                        if (Integer.parseInt(estadoId) == EstadoEnum.TERMINADO.getId()) {
                             inactives++;
                         }
-                    } else if (pdl.getEstadoId().getEstadoId() == EstadoEnum.INACTIVO.getId()) {
+                    } else if (pdl.getEstadoId().getEstadoId() == EstadoEnum.TERMINADO.getId()) {
                         inactives++;
                     }
                 }
